@@ -17,8 +17,6 @@ import: https://github.com/liascript/CodeRunner
 
 # Operatoren und Vererbung
 
-Die interaktive Version des Kurses ist unter diesem [Link](https://liascript.github.io/course/?https://raw.githubusercontent.com/SebastianZug/VL_ProzeduraleProgrammierung/master/10_Vererbung.md#1) zu finden.
-
 **Wie weit waren wir gekommen?**
 
 ```text @plantUML.png
@@ -71,71 +69,6 @@ Für die Implementierung einer Ausgabe auf dem Display des MXCHIP Boards nutzen 
 Motivation
 -------------------
 
-Folgendes Beispiel illustriert den erreichten Status unserer C++ Implementierungen. Unsere Klasse `Student` besteht aus:
-
-+ 3 Membervariablen (Zeile 5-7)
-+ 3 Konstruktoren (Zeile 9-11)
-+ 1 Memeberfunktion (Zeile 13)
-
-Alle sind als `public` markiert.
-
-```cpp                     example.cpp
-#include <iostream>
-
-class Student{
-  public:
-    std::string name;
-    int alter;
-    std::string ort;
-
-    Student(const Student&);
-    Student(std::string n);
-    Student(std::string n, int a, std::string o);
-
-    void ausgabeMethode(std::ostream& os); // Deklaration der Methode
-};
-
-Student::Student(std::string n): name{n}, alter{18}, ort{"Freiberg"}{}
-
-Student::Student(std::string n, int a, std::string o): name{n}, alter{a}, ort{o} {}
-
-Student::Student(const Student& other){
-  this->name = other.name;
-  this->alter = other.alter;
-  this->ort = other.ort;
-}
-
-void Student::ausgabeMethode(std::ostream& os){
-    os << name << " " << ort << " " << alter << "\n";
-}
-
-int main()
-{
-  Student gustav = Student("Zeuner", 27, "Chemnitz");
-  //Student gustav {"Zeuner", 27, "Chemnitz"};
-  //Student gustav("Zeuner", 27, "Chemnitz");
-  gustav.ausgabeMethode(std::cout);
-
-  Student bernhard {"Cotta", 18, "Zillbach"};
-  bernhard.ausgabeMethode(std::cout);
-
-  Student NochMalBernhard = Student(bernhard);
-  NochMalBernhard.ausgabeMethode(std::cout);
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out`, `./a.out`)
-
-> **Aufgabe:** Schreiben Sie
->
->   + eine Funktion `int vergleich(Student, Student)` und
->
->   + eine Methode `int Student::vergleich(Student, Student)`,
-> die zwei Studenten miteinander vergleicht!
-
-
-{{1}}
-> Was ist der Nachteil unserer Lösung?
-
 ### Konzept
 
 Das Überladen von Operatoren erlaubt die flexible klassenspezifische Nutzung von Arithmetischen- und Vergleichs-Symbolen wie  `+`, `-`, `*`, `=`. Damit kann deren Bedeutung für selbstdefinierter Klassen (fast) mit einer neuen Bedeutung versehen werden. Ausnahmen bilden   spezieller Operatoren, die nicht überladen werden dürfen (  ?: ,  :: ,  . ,  .* , typeid , sizeof und die Cast-Operatoren).
@@ -186,42 +119,6 @@ Als Beispiel betrachten wir eine Klasse Rechteck und implementieren zwei Operato
 
 implementiert.
 
-```cpp                     Comparison.cpp
-#include <iostream>
-
-class Rectangle {
-  private:
-    float width, height;
-  public:
-    Rectangle(int w, int h): width{w}, height{h} {}
-    float area() {return width*height;}
-    Rectangle operator+=(Rectangle offset) {
-       float ratio = (offset.area() + this->area()) / this->area();
-       this->width = ratio *  this->width;
-       return *this;
-    }
-};
-
-bool operator>(Rectangle a, Rectangle b){
-    if (a.area() > b.area()) return 1;
-    else return 0;
-}
-
-int main () {
-  Rectangle rect_a(3,4);
-  Rectangle rect_b(5,7);
-  std::cout << "Vergleich: " << (rect_a > rect_b) << "\n";
-
-  std::cout << "Fläche a : " << rect_a.area() << "\n";
-  std::cout << "Fläche b : " << rect_b.area() << "\n";
-  rect_a += rect_b;
-  std::cout << "Summe    : " << rect_a.area();
-
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out`, `./a.out`)
-
 > **Merke:** Üblicherweise werden die Operanden bei der Operatorüberladung als Referenzen übergeben. Damit wird eine Kopie vermieden. In Kombination mit dem Schlüsselwort `const` kann dem Compiler angezeigt werden. dass keine Veränderung an den Daten vorgenommen wird. Sie müssen also nicht gespeichert werden.
 
 ```
@@ -230,11 +127,6 @@ bool operator>(const Rectangle& a, const Rectangle& b){
     else return 0;
 }
 ```
-
-Stellen wir die Abläufe nochmals grafisch dar:
-
-+ Aufruf über Call-by-Value [Pythontutor](http://pythontutor.com/visualize.html#code=%23include%20%3Ciostream%3E%0A%0Aclass%20Rectangle%20%7B%0A%20%20private%3A%0A%20%20%20%20float%20width,%20height%3B%0A%20%20public%3A%0A%20%20%20%20Rectangle%28int%20w,%20int%20h%29%3A%20width%7Bw%7D,%20height%7Bh%7D%20%7B%7D%0A%20%20%20%20float%20area%28%29%20%7Breturn%20width*height%3B%7D%0A%20%20%20%20Rectangle%20operator%2B%3D%28Rectangle%20offset%29%20%7B%0A%20%20%20%20%20%20%20float%20ratio%20%3D%20%28offset.area%28%29%20%2B%20this-%3Earea%28%29%29%20/%20this-%3Earea%28%29%3B%0A%20%20%20%20%20%20%20this-%3Ewidth%20%3D%20ratio%20*%20%20this-%3Ewidth%3B%0A%20%20%20%20%20%20%20return%20*this%3B%0A%20%20%20%20%7D%0A%7D%3B%0A%0Abool%20operator%3E%28Rectangle%20a,%20Rectangle%20b%29%7B%0A%20%20%20%20if%20%28a.area%28%29%20%3E%20b.area%28%29%29%20return%201%3B%0A%20%20%20%20else%20return%200%3B%0A%7D%0A%0Aint%20main%20%28%29%20%7B%0A%20%20Rectangle%20rect_a%283,4%29%3B%0A%20%20Rectangle%20rect_b%285,7%29%3B%0A%20%20std%3A%3Acout%20%3C%3C%20%22Vergleich%3A%20%22%20%3C%3C%20%28rect_a%20%3E%20rect_b%29%20%3C%3C%20%22%5Cn%22%3B%0A%0A%20%20std%3A%3Acout%20%3C%3C%20%22Fl%C3%A4che%20a%20%3A%20%22%20%3C%3C%20rect_a.area%28%29%20%3C%3C%20%22%5Cn%22%3B%0A%20%20std%3A%3Acout%20%3C%3C%20%22Fl%C3%A4che%20b%20%3A%20%22%20%3C%3C%20rect_b.area%28%29%20%3C%3C%20%22%5Cn%22%3B%0A%20%20rect_a%20%2B%3D%20rect_b%3B%0A%20%20std%3A%3Acout%20%3C%3C%20%22Summe%20%20%20%20%3A%20%22%20%3C%3C%20rect_a.area%28%29%3B%0A%0A%20%20return%200%3B%0A%7D&cumulative=false&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=cpp&rawInputLstJSON=%5B%5D&textReferences=false)
-+ Aufruf über Referenz [Pythontutor](http://pythontutor.com/visualize.html#code=%23include%20%3Ciostream%3E%0A%0Aclass%20Rectangle%20%7B%0A%20%20private%3A%0A%20%20%20%20float%20width,%20height%3B%0A%20%20public%3A%0A%20%20%20%20Rectangle%28int%20w,%20int%20h%29%3A%20width%7Bw%7D,%20height%7Bh%7D%20%7B%7D%0A%20%20%20%20float%20area%28%29%20%7Breturn%20width*height%3B%7D%0A%7D%3B%0A%0Abool%20operator%3E%28Rectangle%26%20a,%20Rectangle%26%20b%29%7B%0A%20%20%20%20if%20%28a.area%28%29%20%3E%20b.area%28%29%29%20return%201%3B%0A%20%20%20%20else%20return%200%3B%0A%7D%0A%0Aint%20main%20%28%29%20%7B%0A%20%20Rectangle%20rect_a%283,4%29%3B%0A%20%20Rectangle%20rect_b%285,7%29%3B%0A%20%20std%3A%3Acout%20%3C%3C%20%22Vergleich%3A%20%22%20%3C%3C%20%28rect_a%20%3E%20rect_b%29%20%3C%3C%20%22%5Cn%22%3B%0A%0A%20%20return%200%3B%0A%7D&cumulative=false&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=cpp&rawInputLstJSON=%5B%5D&textReferences=false)
 
 ### Anwendung
 
@@ -342,34 +234,6 @@ Eine umfangreiche Diskussion zur Operatorüberladung finden Sie unter https://ww
 
 ## Vererbung
 
-```cpp                     MultipleTypesOfPersons.cpp
-#include <iostream>
-
-class Student{
-  public:
-    std::string name;
-    std::string ort;
-    std::string studiengang;
-
-    Student(std::string n, std::string o, std::string sg): name{n}, ort{o}, studiengang{sg} {};
-    void printCertificate(std::ostream& os){
-          os << "Studentendatensatz: "  << name << " " << ort << " " << studiengang << "\n";
-    }
-};
-
-int main()
-{
-  Student gustav = Student("Zeuner", "Chemnitz", "Mathematik");
-  gustav.printCertificate(std::cout);
-
-  //Professor winkler = Professor("Winkler", "Freiberg");
-  //winkler.printCertificate(std::cout);
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out`, `./a.out`)
-
-> **Aufgabe:** Implementieren Sie eine neue Klasse `Professor`, die aber auf die Membervariable `Studiengang` verzichtet, aber eine neue Variable `Fakultät` einführt.
-
 ### Motivation
 
 > **Merke: ** Eine unserer Hauptmotivationen bei der "ordentlichen" Entwicklung von Code ist die Vermeidung von Codedopplungen!
@@ -387,29 +251,6 @@ In unserem Code entstehen Dopplungen, weil bestimmte Variablen oder Memberfunkti
 ### Implementierung in C++
 
 In C++ werden Vererbungsmechanismen folgendermaßen abgebildet:
-
-```cpp  
-class Fahrzeug{
-  public:
-    int aktuellePosition[2];    // lat, long Position auf der Erde
-    std::string Zulassungsnummer;
-    Bool Fuehrerscheinpflichtig
-    ...
-};
-
-class Flugzeug: public Fahrzeug{
-  public:
-    int Flughoehe;
-    void fliegen();
-    ...
-};
-
-class Boot: public Fahrzeug{
-  public:
-    void schwimmen();
-    ...
-};
-```
 
 Die generellere Klasse `Fahrzeug` liefert einen Bauplan für die spezifischeren, die die Vorgaben weiter ergänzen. Folglich müssen wir uns die Frage stellen, welche Daten oder Funktionalität übergreifend abgebildet werden soll und welche individuell realisiert werden sollen.
 
@@ -438,35 +279,6 @@ class Hybrid: public Automobil{
     ...
 };
 ```
-
-Was bedeutet das für unsere Implementierung von Studenten und Professoren?
-
-```cpp                     Inheritance.cpp
-#include <iostream>
-
-class Student{
-  public:
-    std::string name;
-    std::string ort;
-    std::string studiengang;
-
-    Student(std::string n, std::string o, std::string sg): name{n}, ort{o}, studiengang{sg} {};
-    void printCertificate(std::ostream& os){
-          os << "Studentendatensatz: "  << name << " " << ort << " " << studiengang << "\n";
-    }
-};
-
-int main()
-{
-  Student gustav = Student("Zeuner", "Chemnitz", "Mathematik");
-  gustav.printCertificate(std::cout);
-
-  //Professor winkler = Professor("Winkler", "Freiberg");
-  //winkler.printCertificate(std::cout);
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out`, `./a.out`)
-
 
 Ein weiteres Beispiel greift den Klassiker der Einführung objektorientierter Programmierung auf, den Kanon der Haustiere :-)
 Das Beispiel zeigt die Initialisierung der Membervariablen :
@@ -512,28 +324,6 @@ int main(){
 ### Vererbungsattribute
 
 Die Zugriffsattribute `public` und `private` kennen Sie bereits. Damit können wir Elemente unserer Implementierung vor dem Zugriff von außen Schützen.
-
-> **Aufgabe:** Verhindern Sie, dass die Einträge von `id` im Nachhinein geändert werden können! Welche zusätzlichen Methoden benötigen Sie dann?
-
-```cpp                     Animals.cpp
-#include <iostream>
-
-class Animal {
-public:
-    std::string name;
-    int id;
-    Animal(std::string name, int id): name{name}, id{id} {};
-};
-
-int main(){
-    Animal fish = Animal("Nemo", 234242343);
-    std::cout << fish.id << std::endl;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out`, `./a.out`)
-
-                                  {{1}}
-********************************************************************************
 
 Wie wirkt sich das Ganze aber auf die Vererbung aus? Hierbei muss neben dem individuellen Zugriffsattribut auch der Status der Vererbung beachtet werden. Damit ergibt sich dann folgendes Bild:
 
@@ -658,52 +448,3 @@ int main()
 Die Polymorphie (griechisch "Vielgestaltigkeit") der objektorientierten Programmierung ist eine Eigenschaft, die in Zusammenhang mit Vererbung einhergeht. Eine Methode ist genau dann polymorph, wenn sie von verschiedenen Klassen unterschiedlich genutzt wird. Wenn Sie mehr darüber wissen wollen, sind Sie herzlich zur Vorlesung Softwareentwicklung im Sommersemester eingeladen!
 
 Dabei untersuchen wir unter anderem Konzepte, wie wir die erbenden Methoden zwingen können ein bestimmte Methode zu implementieren. Mit der Notation `virtual void printData(std::ostream& os) = 0;` wird aus unserer Implementierung eine abstrakte Methode, die in jedem Fall in den erbenden Klassen implementiert sein muss.  
-
-## Anwendungsfall
-
-Entwerfen Sie eine Klasse, die das Verhalten einer Ampel mit den notwendigen
-Zuständen modelliert. Welche Funktionen sollten zusätzlich in die Klasse aufgenommen werden?
-
-<div>
-  <wokwi-led color="red" pin="13" port="B" label="13"></wokwi-led>
-  <wokwi-led color="yellow" pin="12" port="B" label="12"></wokwi-led>
-  <wokwi-led color="green" pin="11" port="B" label="11"></wokwi-led>
-  <span id="simulation-time"></span>
-</div>
-
-```cpp       TrafficLight.cpp
-class Ampel {
-public:
-    Ampel(int red, int yellow, int green): redPin{red}, yellowPin{yellow}, greenPin{green} {};
-    void activateRed() {
-      digitalWrite(redPin, HIGH);
-    }
-    void startOnePeriod(int waitms) {
-      digitalWrite(redPin, HIGH);
-      delay(waitms);
-      digitalWrite(yellowPin, HIGH);
-      delay(waitms);
-      digitalWrite(redPin, LOW);
-      digitalWrite(yellowPin, LOW);
-      digitalWrite(greenPin, HIGH);
-    }
-
-private:
-    int redPin, yellowPin, greenPin;
-    int state = 0;
-};
-
-void setup() {
-  pinMode(11, OUTPUT);
-  pinMode(12, OUTPUT);
-  pinMode(13, OUTPUT);
-  Ampel trafficLight = Ampel(13, 12, 11);
-  trafficLight.activateRed();
-  trafficLight.startOnePeriod(1000);
-}
-
-void loop() {
-  delay(100);
-}
-```
-@AVR8js.sketch
