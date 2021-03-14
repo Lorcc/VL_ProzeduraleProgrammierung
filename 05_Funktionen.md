@@ -20,40 +20,6 @@ Die interaktive Version des Kurses ist unter diesem [Link](https://liascript.git
 
 --------------------------------------------------------------------------------
 
-**Wie weit waren wir gekommen?**
-
-```cpp   AdressierungVonArrays.c
-#include <stdio.h>
-#include <math.h>
-
-#define VALUECOUNT 17
-
-int main(void) {
-  int a [] = {1,2,3,3,4,2,3,4,5,6,7,8,9,1,2,3,4};
-
-  int summe_I = 0;
-  for (int i=0; i<VALUECOUNT; i++){
-    summe_I += a[i];
-  }
-
-  int summe_II = 0;
-  //int* prt_b = NULL;
-  int *ptr_ende = (int *)(&a + 1) - 1;
-  for (int* prt_b = a; prt_b<=ptr_ende; prt_b++){
-    summe_II += *prt_b;
-  }
-
-  printf("Die Summe betraegt %d %d\n", summe_I, summe_II);
-
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc main.c -o a.out -lm`, `./a.out`)
-
-
-Ausführung in der PythonTutor Umgebung [Link](http://pythontutor.com/visualize.html#code=%23include%20%3Cstdio.h%3E%0A%23include%20%3Cmath.h%3E%0A%0A%23define%20VALUECOUNT%2017%0A%0Aint%20main%28void%29%20%7B%0A%20%20int%20a%20%5B%5D%20%3D%20%7B1,2,3,3,4,2,3,4,5,6,7,8,9,1,2,3,4%7D%3B%0A%0A%20%20int%20summe_I%20%3D%200%3B%0A%20%20for%20%28int%20i%3D0%3B%20i%3CVALUECOUNT%3B%20i%2B%2B%29%7B%0A%20%20%20%20summe_I%20%2B%3D%20a%5Bi%5D%3B%0A%20%20%7D%0A%20%20%0A%20%20int%20summe_II%20%3D%200%3B%0A%20%20//int*%20prt_b%20%3D%20NULL%3B%0A%20%20int%20*ptr_ende%20%3D%20%28int%20*%29%28%26a%20%2B%201%29%20-%201%3B%0A%20%20for%20%28int*%20prt_b%20%3D%20a%3B%20prt_b%3C%3Dptr_ende%3B%20prt_b%2B%2B%29%7B%0A%20%20%20%20summe_II%20%2B%3D%20*prt_b%3B%0A%20%20%7D%0A%20%20%0A%20%20printf%28%22Die%20Summe%20betraegt%20%25d%20%25d%5Cn%22,%20summe_I,%20summe_II%29%3B%0A%0A%20%20return%200%3B%0A%7D&cumulative=false&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=c&rawInputLstJSON=%5B%5D&textReferences=false)
-
-
 >  Zur Erinnerung ... an die Schritte zur Realisierung einer Variablen
 
 > * Deklaration ist nur die Vergabe eines Namens und eines Typs für die Variable.
@@ -87,52 +53,6 @@ Ausführung in der PythonTutor Umgebung [Link](http://pythontutor.com/visualize.
 
 
 ## Motivation
-
-**Einführungsbeispiel**
-
-```cpp                          onBlock.c
-#include <stdio.h>
-#include <math.h>
-
-#define VALUECOUNT 17
-
-int main(void) {
-  int a [] = {1,2,3,3,4,2,3,4,5,6,7,8,9,1,2,3,4};
-
-  // Ergebnis Histogramm
-  int hist[10] = {0,0,0,0,0,0,0,0,0,0};
-  // Ergebnis Mittelwert
-  int summe = 0;
-  // Ergebnis Standardabweichung
-  float abweichung = 0;
-  for (int i=0; i<VALUECOUNT; i++){
-    hist[a[i]]++;
-    summe += a[i];
-  }
-  float mittelwert = summe / (float)VALUECOUNT;
-  for (int i=0; i<VALUECOUNT; i++){
-    abweichung += pow((a[i]-mittelwert),2.);
-  }
-  // Ausgabe
-  for (int i=0; i<10; i++){
-     printf("%d - %d\n", i, hist[i]);
-  }
-  // Ausgabe Mittelwert
-  printf("Die Summe betraegt %d, der Mittelwert %3.1f\n", summe, mittelwert);
-  // Ausgabe Standardabweichung
-  float std = sqrt(abweichung / VALUECOUNT);
-  printf("Die Standardabweichung der Grundgesamtheit betraegt %5.2f\n", std);
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out -lm`, `./a.out`)
-
-Ihre Aufgabe besteht nun darin ein neues Programm zu schreiben, das Ihre
-Implementierung der Mittelwertbestimmung integriert. Wie gehen Sie vor? Was sind
-die Herausforderungen dabei?
-
-> Stellen Sie das Programm so um, dass es aus einzelnen Bereichen besteht und überlegen Sie, welche Variablen wo gebraucht werden.
-
 {{1}}
 **Prozedurale Programmierung Ideen und Konzepte**
 
@@ -174,34 +94,6 @@ suchen.
 {{2}}
 Funktionen sind Unterprogramme, die ein Ausgangsproblem in kleine,
 möglicherweise wiederverwendbare Codeelemente zerlegen.
-
-{{2}}
-```cpp                          standardabweichung.c
-#include <stdio.h>
-
-// Funktion für den Mittelwert
-// Mittelwert = f_Mittelwert(daten)
-
-// Funktion für die Standardabweichung
-// Standardabweichung =  f_Standardabweichung(daten)
-
-// Funktion für die Histogrammgenerierung
-// Histogramm = f_Histogramm(daten)
-
-// Funktion für die Ausgabe
-// f_Ausgabe(daten, {Mittelwert, Standardabweichung, Histogramm})
-
-{{2}}
-int main(void) {
-  int a[] = {3,4,5,6,2,3,2,5,6,7,8,10};
-  // b = f_Mittelwert(a) ...
-  // c = f_Standardabweichung(a) ...
-  // d = f_Histogramm(a) ...
-  // f_Ausgabe(a, b, c, d) ...
-  return 0;
-}
-```
-
 {{3}}
 **Wie findet sich diese Idee in großen Projekten wieder?**
 
@@ -269,33 +161,6 @@ int main(void) {
 
 Die Funktionsdefinition wird für jede Funktion genau einmal benötigt.
 
-### Beispiele für Funktionsdefinitionen
-
-``` c
-int main (void) {
-  /* Anweisungsblock mit Anweisungen */
-}
-```
-
-``` c
-int printf(const char * restrict format, ...){
-   /* Anweisungsblock mit Anweisungen */
-}
-
-//int a = printf("Hello World\n %d", 1);
-```
-
-``` c
-void printDatenSatz(struct student datensatz){
-   /* Anweisungsblock mit Anweisungen */
-}
-```
-
-``` c
-int mittelwert(int * array){
-   /* Anweisungsblock mit Anweisungen */
-}
-```
 
 ### Aufruf der Funktion
 > **Merke:** Die Funktion (mit der Ausnahme der `main`-Funktion) wird erst
@@ -305,201 +170,27 @@ int mittelwert(int * array){
 Der Funktionsaufruf einer Funktionen mit dem Rückgabewert ist meistens Teil
 einer Anweisung, z.B. einer Zuweisung oder einer Ausgabeanweisung.
 
-```cpp                              callAFunction.c
-#include <stdio.h>
-#include <math.h>
-
-void Info(){
-    printf("Dieses Programm rundet Zahlenwerte.\n");
-    printf("-----------------------------------\n");
-}
-
-int runden(float a){
-    if ((a - (int)a)<0.5)
-       return ((int) a);
-    else
-       return (((int) a) + 1);
-}
-
-float rundenf(float a, int nachkomma){
-    float shifted= a* pow(10, nachkomma);
-    if ((shifted - (int)shifted)<0.5)
-       return ((float)(int)shifted * pow(10, -nachkomma));
-    else
-       return ((float)((int)shifted + 1) * pow(10, -nachkomma));
-    printf("%f", shifted);
-}
-
-int main(void){
-    Info();
-    float input = 8.4535;
-    printf("Eingabewert %f - Ausgabewert %d\n", input, runden(input));
-    printf("Eingabewert %f - Ausgabewert %f\n", input, rundenf(input,2));
-
-    return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out -lm`, `./a.out`)
-
 
 ### Fehler
 
 **Rückgabewert ohne Rückgabedefintion**
-
-```cpp   return.c
-void foo()
-{
-	/* Code */
-	return 5; /* Fehler */
-}
-
-int main(void)
-{
-  return 0;
-}
-```
-@LIA.evalWithDebug(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-{{1}}
 **Erwartung eines Rückgabewertes**
-
-{{1}}
-```cpp   returnII.c
-#include <stdio.h>
-
-void foo(){
-   printf("Ausgabe");
-}
-
-int main(void) {
-  int i = foo();
-  return 0;
-}
-```
-@LIA.evalWithDebug(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-
-{{2}}
 **Implizite Convertierungen**
-
-{{2}}
-```cpp     conversion.c
-#include <stdio.h>
-
-float foo(){
-   return 3.123f;
-}
-
-int main(void) {
-  int i = foo();
-  printf("%d\n",i);
-  return 0;
-}
-```
-@LIA.evalWithDebug(`["main.c"]`, `gcc -Wall -Wconversion main.c -o a.out`, `./a.out`)
-
-
-{{3}}
 **Parameterübergabe ohne entsprechende Spezifikation**
-
-{{3}}
-```cpp    paramters.c
-#include <stdio.h>
-
-int foo(void){       // <- Die Funktion erwartet explizit keine Parameter
-   return 3;
-}
-
-int main(void) {
-  int i = foo(5);
-  return 0;
-}
-```
-@LIA.evalWithDebug(`["main.c"]`, `gcc -Wall -Wconversion main.c -o a.out`, `./a.out`)
-
-
-{{4}}
 **Anweisungen nach dem return-Schlüsselwort**
-
-{{4}}
-```cpp    codeOrder.c
-int foo()
-{
-	return 5;
-  /* Code */   // Wird nie erreicht!
-}
-```
-
-{{5}}
 **Falsche Reihenfolgen der Parameter**
 
-{{5}}
-```cpp     conversion.c
-#include <stdio.h>
-
-void foo(int index, float wert){
-  printf("Index   -  Wert\n");
-  printf("%5d   - %5.1f\n\n", index, wert);
-}
-
-int main(void) {
-  foo(4, 6.5);
-  foo(6.5, 4);
-  return 0;
-}
-```
-@LIA.evalWithDebug(`["main.c"]`, `gcc -Wall -Wconversion main.c -o a.out`, `./a.out`)
-
 ### Funktionsdeklaration
-
-```cpp  experiments.c
-#include <stdio.h>
-
-int main(void) {
-  int i = foo();       // <- Aufruf der Funktion
-  printf("i=%d\n", i);
-  return 0;
-}
-
-int foo(void){         // <- Definition der Funktion
-   return 3;
-}
-```
-@LIA.evalWithDebug(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
 
 Damit der Compiler überhaupt von einer Funktion Kenntnis nimmt, muss diese vor
 ihrem Aufruf bekannt gegeben werden. Im vorangegangenen Beispiel wird die
 die Funktion erst nach dem Aufruf definiert. Hier erfolgt eine automatische
 (implizite) Deklaration. Der Complier zeigt dies aber durch ein *Warning* an.
 
-{{1}}
-Eine explizite Deklaration zeigt folgendes Beispiel:
-
-{{1}}
-```cpp     explicite.c
-#include <stdio.h>
-
-int foo(void);         // Explizite Einführung der Funktion foo()
-
-int main(void) {
-  int i = foo();       // <- Aufruf der Funktion
-  printf("i=%d\n", i);
-  return 0;
-}
-
-int foo(void){         // <- Definition der Funktion foo()
-   return 3;
-}
-```
-@LIA.evalWithDebug(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-{{2}}
 Das Ganze wird dann relevant, wenn Funktionen aus anderen Quellcodedateien
 eingefügt werden sollen. Die Deklaration macht den Compiler mit dem Aussehen der
 Funktion bekannt. Diese werden mit `extern` als Spezifizierer markiert.
 
-{{2}}
 ```cpp
 extern float berechneFlaeche(float breite, float hoehe);
 ```
@@ -520,25 +211,6 @@ In allen Beispielen bis jetzt wurden Parameter an die Funktionen *call-by-value*
 Kopie der Variable gearbeitet wird und die Änderungen sich nicht auf den
 ursprünglichen Wert auswirken.
 
-```cpp          Student.c
-#include <stdio.h>
-
-// Definitionsteil
-void doSomething(int a){
-  printf("%d a in der Schleife\n", ++a);
-}
-
-int main(void) {
-   int a = 5;
-   printf("%d a in main\n", a);
-   doSomething(a);
-   printf("%d a in main\n", a);
-   return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-
 **call-by-reference**
 
 Bei einer Übergabe als Referenz wirken sich Änderungen an den Parametern auf die
@@ -550,51 +222,9 @@ realisiert. In der Liste der formalen Parameter wird ein Zeiger eines
 passenden Typs definiert. Beim Funktionsaufruf wird als Argument statt
 Variable eine Adresse übergeben. Beachten Sie, dass für den Zugriff auf den Inhalt des Zeigers (einer Adresse) der Inhaltsoperator `*` benötigt wird.
 
-```c                    ParameterI.c
-#include <stdio.h>
-#include <stdlib.h>
-
-void inkrementieren(int *variable){
-  (*variable)++;
-}
-
-int main(void) {
-  int a=0;
-  inkrementieren(&a);
-  printf("a = %d\n", a);
-  inkrementieren(&a);
-  printf("a = %d\n", a);
-  return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-
 Die Adresse einer Variable wird mit dem Adressenoperator `&`
 ermittelt. Weiterhin kann an den Zeiger-Parameter eine Array-Variable
 übergeben werden.
-
-```c                   ParameterII.c
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-
-double sinussatz(double *lookup_sin, int angle, double opositeSide){
-  printf("Größe des Arrays %ld\n", sizeof(*lookup_sin));
-  return opositeSide*lookup_sin[angle];
-}
-
-int main(void) {
-  double sin_values[360] = {0};
-  for(int i=0; i<360; i++) {
-    sin_values[i] = sin(i*M_PI/180);
-  }
-  printf("Größe des Arrays %ld\n", sizeof(sin_values));
-  printf("Result =  %lf \n",sinussatz(sin_values, 30, 20));
-  return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out -lm`, `./a.out`)
 
 Der Vorteil der Verwendung der Zeiger als Parameter besteht darin, dass
 in der Funktion mehrere Variablen auf eine elegante Weise verändert
@@ -626,50 +256,11 @@ Analog zur Bereitstellung von Parametern entsprechend dem "call-by-reference"
 Konzept können auch Rückgabewerte als Pointer vorgesehen sein. Allerdings
 sollen Sie dabei aufpassen ...
 
-```c                         returnPointer.c
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-
-int * doCalc(int *wert) {
-  int a = *wert + 5;
-  return &a;
-}
-
-int main(void) {
-  int b = 5;
-  printf("Irgendwas stimmt nicht %d", * doCalc(&b) );
-  return EXIT_SUCCESS;
-}
-```
-@LIA.evalWithDebug(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
 Mit dem Beenden der Funktion werden deren lokale Variablen vom Stack gelöscht.
 Um diese Situation zu handhaben können Sie zwei Lösungsansätze realisieren.
 
 **Variante 1**  Sie übergeben den Rückgabewert in der Parameterliste.
 
-```c          PointerAsParameter.c
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-
-void kreisflaeche(double durchmesser, double *flaeche) {
-  *flaeche = M_PI * pow(durchmesser / 2, 2);
-  // Hier steht kein return !
-}
-
-int main(void) {
-  double wert = 5.0;
-  double flaeche = 0;
-  kreisflaeche(wert, &flaeche);
-  printf("Die Kreisfläche beträgt für d=%3.1lf[m] %3.1lf[m²] \n", wert, flaeche);
-  return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out -lm`, `./a.out`)
-
-{{1}}
 **Variante 2** Rückgabezeiger adressiert mit `static` bezeichnete Variable. Aber Achtung, diese Lösung funktioniert nicht bei rekursiven Aufrufen.
 
 {{1}}
@@ -768,50 +359,8 @@ Zur Erinnerung: **globale**-Variable werden außerhalb jeder Funktionen definier
 und gelten in allen Funktionen, **lokale**-Variablen gelten nur in der Funktion,
 in der sie definiert sind.
 
-```cpp                 variables.c
-#include <stdio.h>
-
-const float pi = 3.14;
-
-float berechneUmfang(float durchmesser){
-  return durchmesser * pi;
-}
-
-float berechneFlaeche(float durchmesser){
-  float radius = durchmesser / 2;
-  return radius * radius * pi;
-}
-
-int main() {
-   char gueltig = 0;
-   float durchmesser = 23.2;
-   if (durchmesser > 0) gueltig = 1;
-   if (gueltig){
-     int linecount = 0;
-     printf("Umfang    %4.1f\n", berechneUmfang(23.2));
-     linecount++;
-     printf("Flaeche  %4.1f\n", berechneFlaeche(23.2));
-     linecount++;
-     printf("Pi kenne ich hier auch %f\n", pi);
-     linecount++;
-     printf("%d Zeilen ausgegeben\n", linecount);
-   }
-   return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-| Variable     | Spezifik         | Bedeutung                       |
-|:-------------|:-----------------|:--------------------------------|
-| `pi`         | global, const    | im gesammten Programm           |
-| `radius`     | lokal            | nur in `berechneFlaeche`        |
-| `gueltig`    | lokal            | nur in `main`                   |
-| `linecount`  | lokal            | nur im Anweisungsblock von  `if`|
-
-{{1}}
 ** Static-Variablen**
 
-{{1}}
 `static`-Variablen, definiert in einer Funktion, behalten ihren Wert auch nach
 dem Verlassen des Funktionsblocks.
 
