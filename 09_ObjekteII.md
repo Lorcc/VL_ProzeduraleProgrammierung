@@ -16,35 +16,6 @@ import: https://github.com/liascript/CodeRunner
 
 # Memberfunktionen und Konstruktoren
 
-Die interaktive Version des Kurses ist unter diesem [Link](https://liascript.github.io/course/?https://raw.githubusercontent.com/SebastianZug/VL_ProzeduraleProgrammierung/master/09_ObjekteII.md#1) zu finden.
-
-**Wie weit waren wir gekommen?**
-
-```cpp   Rectangle
-#include <iostream>
-
-class Rectangle {
-  private:
-    int width, height;
-  public:
-    void set_values (int,int);          // Deklaration
-    int area() {return width*height;}   // Deklaration und Defintion
-};
-
-void Rectangle::set_values (int x, int y) {
-  width = x;
-  height = y;
-}
-
-int main () {
-  Rectangle rect;
-  rect.set_values (3,4);
-  std::cout << "area: " << rect.area();
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out `, `./a.out`)
-
 **Inhalt der heutigen Veranstaltung**
 
 * Implementierung von Konstruktoren
@@ -60,52 +31,6 @@ int main () {
 * Nach welchen Kriterien werden überladene Funktionen differenziert?
 
 ## Parallelität von Klassen und Strukturen in C++
-
-```cpp                     class.cpp
-#include <iostream>
-
-class Student{
-  public:
-    std::string name;  // "-"
-    int alter;
-    std::string ort;
-
-    void ausgabe(){  // Achtung keine besonders gute Lösung
-                     // siehe den Abschnitt "bessere Ausgabe"
-        std::cout << name << " " << ort << " " << alter  << std::endl;
-    }
-};
-
-int main()
-{
-  Student bernhard {"Cotta", 25, "Zillbach"};
-  bernhard.ausgabe();
-  return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out`, `./a.out`)
-
-```cpp                     struct.cpp
-#include <iostream>
-
-struct Student{
-    std::string name;  // "-"
-    int alter;
-    std::string ort;
-
-    void ausgabe(){
-        std::cout << name << " " << ort << " " << alter  << std::endl;
-    }
-};
-
-int main()
-{
-  Student bernhard {"Cotta", 25, "Zillbach"};
-  bernhard.ausgabe();
-  return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out`, `./a.out`)
 
 > **Merke: ** Während `struct` in C nur eine Datenstruktur beschreibt, kann in C++ damit ein Objekt spezifiziert werden!
 
@@ -151,72 +76,7 @@ int main()
 
 Methoden können, wie wir es bereits im Beispiel der vergangenen Woche gesehen werden auch von der Klassendefinition getrennt werden.
 
-```cpp                     ApplicationOfStructs.cpp
-#include <iostream>
-
-class Student{
-  public:
-    std::string name;  // "-"
-    int alter;
-    std::string ort;
-
-    void ausgabeMethode();    // Deklaration der Methode
-};
-
-// Implementierung der Methode
-void Student::ausgabeMethode(){
-    std::cout << name << " " << ort << " " << alter  << std::endl;
-}
-
-int main()
-{
-  Student bernhard {"Cotta", 25, "Zillbach"};
-  bernhard.ausgabeMethode();
-  return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out`, `./a.out`)
-
 Diesen Ansatz kann man weiter treiben und die Aufteilung auf einzelne Dateien realisieren. Der Code einer inline-Funktion wird vom Compiler direkt an der Stelle eingefügt, wo der Aufruf stattfindet. Die inline-Funktionen sollten aber möglichst klein gehalten werden. In der Klasse definierte Funktionen sind alle inline, d.h. umfangreiche Funktionen sollen sinnvollerweise außerhalb der Klasse definiert werden und in der Klasse nur deklariert. Es bietet sich weiterhin die Verteilung auf .h und .cpp-Dateien.
-
-```cpp     -Student.h
-#ifndef STUDENT_H_INCLUDED
-#define STUDENT_H_INCLUDED
-
-#include <iostream>
-#include <string>
-
-class Student{
-  public:
-    std::string name;  // "-"
-    int alter;
-    std::string ort;
-
-    void ausgabeMethode();    // Deklaration der Methode
-};
-
-#endif
-```
-```cpp     -Student.cpp
-#include "Student.h"
-
-void Student::ausgabeMethode(){
-    std::cout << name << " " << ort << " " << alter  << std::endl;
-}
-
-```
-```cpp     +main.cpp
-#include <iostream>
-#include "Student.h"
-
-int main()
-{
-  Student bernhard {"Cotta", 25, "Zillbach"};
-  bernhard.ausgabeMethode();
-  return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["Student.h", "Student.cpp", "main.cpp"]`, `g++ -Wall main.cpp Student.cpp -o a.out`, `./a.out`)
 
 Was gab es noch mal an unserer `ausgabeMethode()` zu meckern? In der aktuellen Version geben wir das Gerät, auf das die Ausgabe umgesetzt wird explizt im Code an. Was aber, wenn jemand die Implementierung nutzen möchte und das Resultat eben nicht in der Konsole sondern auf dem Drucker, einem Speicher usw. ausgegeben wissen möchte?
 
@@ -259,61 +119,10 @@ int main()
 
 C verbietet Funktionen die einen gleichen Namen haben. Damit ist die variable Verwendung von Funktionen in Abhängigkeit von der Signatur der Funktion nicht möglich.
 
-```c                     overwrite.c
-#include <stdio.h>
-
-int Divide(int dividend, int divisor){
-  return dividend / divisor;
-}
-
-double Divide(double dividend, double divisor){
-  return dividend / divisor;
-}
-
-int main()
-{
-  int a = 5;
-  int b = 10;
-  int c = Divide(a, b);
-
-  float x = 5.23;
-  float y = 15.34;
-  float z = Divide(x, y);
-
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
 Beachten Sie einen zweiten Effekt im oben genannten Beispiel! Wenn Sie die Zeilen 7 bis 9 auskommentieren, kommt eine implizierter Cast-Operation also eine Typumwandlung zur Wirkung. Der Compiler bildet unsere Gleitkommazahlen auf Ganzzahldarstellungen ab und wendet die Funktion an. Das entspricht aber nicht unserer Intention in diesem Abschnitt - wir wollten ja zwei Funktionen für unterschiedliche Datentypen entwerfen.
 
 C++ eröffnet mit dem Überladen von Funktionen neue Möglichkeiten. Dieser Mechanismus lässt sich auf Funktionen und Methoden anwenden.
 
-```c                     overwrite.cpp
-#include <stdio.h>
-
-int Divide(int dividend, int divisor){
-  return dividend / divisor;
-}
-
-double Divide(double dividend, double divisor){
-  return dividend / divisor;
-}
-
-int main()
-{
-  int a = 5;
-  int b = 10;
-  int c = Divide(a, b);
-
-  float x = 5.23;
-  float y = 15.34;
-  float z = Divide(x, y);
-
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out`, `./a.out`)
 
 ```cpp                     ostream.cpp
 #include <iostream>
@@ -372,38 +181,6 @@ int main()
 
 Die Klasse spezifiziert unter anderem (!) welche Daten in den Instanzen/Objekten zusammenfasst werden. Wie aber erfolgt die Initialisierung? Bisher haben wir die Daten bei der Erzeugung der Instanz übergeben.
 
-```cpp                     Konstruktoren.cpp
-#include <iostream>
-
-class Student{
-  public:
-    std::string name;
-    int alter;
-    std::string ort;
-
-    void ausgabeMethode(std::ostream& os); // Deklaration der Methode
-};
-
-// Implementierung der Methode
-void Student::ausgabeMethode(std::ostream& os){
-    os << name << " " << ort << " " << alter << "\n";
-}
-
-int main()
-{
-  Student bernhard {"Cotta", 25, "Zillbach"};
-  bernhard.ausgabeMethode(std::cout);
-
-  Student alexander { .name = "Humboldt" , .ort = "Berlin"  };
-  alexander.ausgabeMethode(std::cout);
-
-  Student unbekannt;
-  unbekannt.ausgabeMethode(std::cout);
-
-  return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out`, `./a.out`)
 
 Es entstehen 3 Instanzen der Klasse `Student`, die sich im Variablennamen `bernhard`, `alexander` und `unbekannt` und den Daten unterscheiden.
 
@@ -417,75 +194,13 @@ Kombinationen  initialisieren:
 {}
 ```
 
-**Elementinitialisierung beim Aufruf:**
-
-| Umsetzung                                                                             | Beispiel                                      |
-|:------------------------------------------------------------------------------------- |:--------------------------------------------- |
-| vollständige Liste in absteigender Folge (uniforme Initialisierung)                   | `Student Bernhard {"Cotta", 25, "Zillbach"};` |
-| unvollständige Liste (die fehlenden Werte werden durch Standard Defaultwerte ersetzt) | `Student Bernhard {"Cotta", 25};`             |
-| vollständig leere Liste, die zum Setzen von Defaultwerten führt                                                                                      | `Student Bernhard {};`                        |
-| Aggregierende Initialisierung (C++20)                                                                                      |   `Student alexander = { .ort = "unknown"}; `                                             |
-
-Wie können wir aber:
-
-+ erzwingen, dass eine bestimmte Membervariable in jedem Fall gesetzt wird (weil die Klasse sonst keinen Sinn macht)
-+ prüfen, ob die Werte einem bestimmten Muster entsprechen ("Die PLZ kann keine negativen Werte umfassen")
-+ automatische weitere Einträge setzen (einen Zeitstempel, der die Initialisierung festhält)
-+ ... ?
-
 ### Konstruktoren
 
 Konstruktoren dienen der Koordination der Initialisierung der Instanz einer Klasse. Sie werden entweder implizit über den Compiler erzeugt oder explizit durch den Programmierer angelegt.
 
-```cpp
-class class_name {
-  access_specifier_1:
-    typ member1;
-  access_specifier_2:
-    typ member2;
-    memberfunktionA(...)
-
-  class_name (...) {           // <- Konstruktor
-    // Initalisierungscode
-  }
-};
-
-class_name instance_name (...);
-```
-
 > **Merke: ** Ein Konstruktor hat keinen Rückgabetyp!
 
 Beim Aufruf `Student bernhard {"Cotta", 25, "Zillbach"};` erzeugt der Compiler eine Methode `Student::Student(std::string, int, std::string)`, die die Initialisierungsparameter entgegennimmt und diese der Reihenfolge nach an die Membervariablen übergibt. Sobald wir nur einen explizten Konstruktor integrieren, weist der Compiler diese Verantwortung von sich.
-
-Entfernen Sie den Kommentar in Zeile 11 und der Compiler macht Sie darauf aufmerksam.
-
-```cpp                     defaultConstructor.cpp
-#include <iostream>
-
-class Student{
-  public:
-    std::string name;  // "-"
-    int alter;
-    std::string ort;
-
-    void ausgabeMethode(std::ostream& os){
-        os << name << " " << ort << " " << alter;
-    }
-
-    //Student();
-};
-
-// Implementierung der Methode
-
-
-int main()
-{
-  Student bernhard {"Cotta", 25, "Zillbach"};
-  bernhard.ausgabeMethode(std::cout);
-  return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out`, `./a.out`)
 
 Dabei sind innerhalb des Konstruktors zwei Schreibweisen möglich:
 
@@ -496,7 +211,7 @@ Student(std::string name, int alter, std::string ort): name(name), alter(alter),
 }
 
 // Zuweisung innerhalb des Konstruktors
-Student(std::string name, int alter, std::string ort):
+Student(std::string name, int alter, std::string ort){
     this->name = name;
     this->alter = alter;
     this->ort = ort;
@@ -507,41 +222,6 @@ Die zuvor beschriebene Methodenüberladung kann auch auf die Konstruktoren angew
 
 + ohne spezfische Vorgabe wird der Standardinitialisierungswert verwendt (Ganzzahlen 0, Gleitkomma 0.0, Strings "")
 + die Vorgabe eines indivduellen Default-Wertes (vgl. Zeile 5)
-
-```cpp                     constructor.cpp
-#include <iostream>
-
-class Student{
-  public:
-    std::string name;
-    int alter;
-    std::string ort; // = "Freiberg"
-
-    void ausgabeMethode(std::ostream& os){
-        os << name << " " << ort << " " << alter << "\ņ";
-    }
-
-    Student(std::string name, int alter, std::string ort): name(name), alter(alter), ort(ort)
-    {
-    }
-
-    Student(std::string name): name(name)
-    {
-    }
-};
-
-int main()
-{
-  Student bernhard {"Cotta", 25, "Zillbach"};
-  bernhard.ausgabeMethode(std::cout);
-
-  Student alexander = Student("Humboldt");
-  alexander.ausgabeMethode(std::cout);
-
-  return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out`, `./a.out`)
 
 Delegierende Konstruktoren rufen einen weiteren Konstruktor für die teilweise
 Initialisierung auf. Damit lassen sich Codeduplikationen, die sich aus der
@@ -603,7 +283,3 @@ Einen Destruktor explizit aufzurufen, ist selten notwendig (oder gar eine gute I
     Die Auflistung der Memberfunktionen der entsprechenden Klassen finden Sie unter [Link](https://microsoft.github.io/azure-iot-developer-kit/docs/apis/)
 
 Der Beispielcode für die Anwendungen ist in den `examples` Ordnern des Projektes enthalten.
-
-## Fröhliche Weihnachten
-
-Die Arbeitsgruppe Softwareentwicklung und Robotik wünscht Ihnen ein besinnliches Weihnachtsfest 2020!
