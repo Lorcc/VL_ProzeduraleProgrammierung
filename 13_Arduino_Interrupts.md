@@ -17,33 +17,6 @@ import: https://github.com/liascript/CodeRunner
 
 # Zeitverhalten und Interrupts
 
-Die interaktive Version des Kurses ist unter diesem [Link](https://liascript.github.io/course/?https://raw.githubusercontent.com/SebastianZug/VL_ProzeduraleProgrammierung/master/13_Arduino_Interrupts.md#1) zu finden.
-
-**Wie weit waren wir gekommen?**
-
-Schauen wir noch mal auf die Unterschiede unserer beiden Ausführungsumgebungen im Vergleich an:
-
-1. Simulation in den Vorlesungsmaterialen
-
-```cpp       uart.cpp
-int thisByte = 33;
-
-void setup() {
-  Serial.begin(9600);
-  Serial.println("Hello World");
-}
-
-void loop() {
-}
-```
-@AVR8js.sketch
-
-2. Realer Controller in den praktischen Anwendungen der Vorlesung / Übungen
-
-![Bild](./images/11_Arduino/MXchip.png)<!-- style="width: 55%; max-width: 1000px" -->[^3]
-
-[^3]: Produktwebseite Firma MXChip, AZ3166 Procuct Details [Link](https://en.mxchip.com/az3166)
-
 |                | Simulator                                                        | MXChip Board                                     |
 | -------------- | ---------------------------------------------------------------- | ------------------------------------------------ |
 | Chip           | Arduino Uno als Basis                                            | MXChip mit 32Bit Controller                      |
