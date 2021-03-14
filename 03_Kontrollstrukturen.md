@@ -373,130 +373,6 @@ formuliert werden.
 
 ************************************************************************
 
-       {{4}}
-************************************************************************
-
-**Beispiel**
-
-Nehmen wir an, dass wir einen kleinen Roboter aus einem Labyrinth fahren lassen
-wollen. Dazu gehen wir davon aus, dass er bereits an einer Wand steht. Dieser soll er mit der "Linke-Hand-Regel" folgen. Dabei wird von einem einfach zusammenhängenden Labyrith ausgegangen.
-
-Die nachfolgende Grafik illustriert den Aufbau des Roboters und die vier möglichen Konfigurationen des Labyrinths, nachdem ein neues Feld betreten wurde.
-
-![robotMaze.jpeg](./images/03_Kontrollfluss/robotMaze.jpeg)<!--
-style=" width: 80%;
-        max-width: 600px;
-        min-width: 400px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;"
--->
-
-| Fall | Bedeutung                                                                                                                         |
-| ---- | --------------------------------------------------------------------------------------------------------------------------------- |
-| 1.   | Die Wand knickt nach links weg. Unabhängig von WG und WR folgt der Robter diesem Verlauf.                                         |
-| 2.   | Der Roboter folgt der linksseitigen Wand.                                                                                         |
-| 3.   | Die Wand blockiert die Fahrt. Der Roboter dreht sich nach rechts, damit liegt diese Wandelement nun wieder zu seiner linken Hand. |
-| 4.   | Der Roboter folgt dem Verlauf nach einer Drehung um 180 Grad.                                                                     |
-
-
-| WL  | WG  | WR  | Fall | Verhalten                  |
-|:--- |:--- |:--- | ---- |:-------------------------- |
-| 0   | 0   | 0   | 1    | Drehung Links, Vorwärts    |
-| 0   | 0   | 1   | 1    | Drehung Links, Vorwärts    |
-| 0   | 1   | 0   | 1    | Drehung Links, Vorwärts    |
-| 0   | 1   | 1   | 1    | Drehung Links, Vorwärts    |
-| 1   | 0   | 0   | 2    | Vorwärts                   |
-| 1   | 0   | 1   | 2    | Vorwärts                   |
-| 1   | 1   | 0   | 3    | Drehung Rechts, Vorwärts   |
-| 1   | 1   | 1   | 4    | Drehung 180 Grad           |
-
-************************************************************************
-
-{{5}}
-************************************************************************
-```cpp                     IfExample.c
-#include <stdio.h>
-
-int main(){
-  int WL, WG, WR;
-  WL = 0; WG = 1; WR =1;
-  if (!WL)                         // Fall 1
-    printf("Drehung Links\n");
-  if ((WL) & (!WG))                // Fall 2
-      printf("Vorwärts\n");
-  if ((WL) & (WG) & (!WR))         // Fall 3
-    printf("Drehung Rechts\n");
-  if ((WL) & (WG) & (WR))          // Fall 4
-    printf("Drehung 180 Grad\n");
-	return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-**Sehen Sie mögliche Vereinfachungen des Codes?**
-
-************************************************************************
-
-#### Zwischenfrage
-
-```cpp                     Test.c
-#include <stdio.h>
-
-int main()
-{
-    int Punkte = 45;
-    int Zusatzpunkte = 15;
-    if (Punkte + Zusatzpunkte >= 50)
-    {
-       printf("Test ist bestanden!\n");
-       if (Zusatzpunkte >= 15)
-       {
-          printf("Alle Zusatzpunkte geholt!\n");
-       }else{
-           if(Zusatzpunkte > 8) {
-               printf("Respektable Leistung\n");
-           }
-       }
-    }else{
-       printf("Leider durchgefallen!\n");
-    }
-    return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-
-<!--
-style="width: 90%; min-width: 420px; max-width: 720px;"
--->
-```ascii
-+-----------------------------------------------+
-| Leider durchgefallen!                         |
-|                                               |
-|                                               |
-+-----------------------------------------------+
-
-+-----------------------------------------------+
-| Test ist bestanden                            |
-|                                               |
-|                                               |
-+-----------------------------------------------+
-
-+-----------------------------------------------+
-| Test ist bestanden!                           |
-| Alle Zusatzpunkte geholt!                     |
-|                                               |
-+-----------------------------------------------+
-
-+-----------------------------------------------+
-| Test ist bestanden!                           |
-| Respektable Leistung                          |
-|                                               |
-+-----------------------------------------------+                 .
-```
-
-
 #### `switch`-Anweisungen
 
 > [*Too many ifs - I think I switch* ](http://www.peacesoftware.de/ckurs7.html)
@@ -583,34 +459,10 @@ alle darauf folgenden Fälle bis zum Ende des `switch` oder dem nächsten `break
 zwingend ausgeführt.
 
 {{3}}
-```cpp                     SwitchBreak.c
-#include <stdio.h>
-
-int main() {
-  int a=5;
-
-  switch(a) {
-    case 5:   // Multiple Konstanten
-    case 6:
-    case 7:
-      printf("Der Wert liegt zwischen 4 und 8\n");
-    case 3:
-      printf("Der Wert ist 3 \n");
-      break;
-    case 0:
-      printf("Der Wert ist 0 \n");
-    default: printf("Wert in keiner Kategorie\n");}
-
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-{{4}}
 Unter Ausnutzung von `break` können Kategorien definiert werden, die aufeinander
 aufbauen und dann übergreifend "aktiviert" werden.
 
-{{4}}
+{{3}}
 ```cpp                     MovementDetection.c
 #include <stdio.h>
 
@@ -738,8 +590,6 @@ int main(){
 ```
 @LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
 
-<iframe width="800" height="500" frameborder="0" src="http://pythontutor.com/iframe-embed.html#code=%23include%20%3Cstdio.h%3E%0A%0Aint%20main%28%29%7B%0A%20%20%20%20int%20i%3B%0A%20%20for%20%28i%20%3D%201%3B%20i%3C10%3B%20i%2B%2B%29%0A%20%20%20%20printf%28%22%25d%20%22,%20i%29%3B%0A%0A%20%20printf%28%22%5CnNach%20der%20Schleife%20hat%20i%20den%20Wert%20%25d%5Cn%22%20,i%29%3B%0A%20%20%20%20return%200%3B%0A%7D&codeDivHeight=400&codeDivWidth=350&curInstr=0&origin=opt-frontend.js&py=cpp&rawInputLstJSON=%5B%5D"> </iframe>
-
 
 {{1}}
 **Beliebte Fehlerquellen**
@@ -750,22 +600,6 @@ int main(){
 * fehlerhafte Konfiguration von Zählschleifen
 * Nichtberücksichtigung der Tatsache, dass die Zählvariable nach dem Ende der
   Schleife über dem Abbruchkriterium liegt
-
-{{1}}
-```cpp                     SemicolonAfterFor.c
-#include <stdio.h>
-
-int main(){
-  int i;
-  for (i = 1; i<10; i++);
-    printf("%d ", i);
-
-  printf("Das ging jetzt aber sehr schnell ... \n %d" ,i);
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
 
 #### `while`-Schleife
 
@@ -953,51 +787,3 @@ style="width: 50%;
        margin-left: auto;
        margin-right: auto;" -->
 
-## Beispiel des Tages
-
-Das Codebeispiel des Tages führt die Berechnung eines sogenannten magischen
-Quadrates vor.
-
-Das Lösungsbeispiel stammt von der Webseite https://rosettacode.org, die für das
-Problem [magic square](https://rosettacode.org/wiki/Magic_squares_of_odd_order#C) und
-viele andere "Standardprobleme" Lösungen in unterschiedlichen Sprachen präsentiert.
-Sehr lesenswerte Sammlung!
-
-```cpp                     magicSquare.c
-#include <stdio.h>
-
-int f(int n, int x, int y)
-{
-  return (x + y*2 + 1) % n;
-}
-
-int main() {
-  int i, j, n;
-
-  //Input must be odd and not less than 3.
-  n = 5;
-  if (n < 3 || (n % 2) == 0) return 2;
-
-  for (i = 0; i < n; i++) {
-    for (j = 0; j < n; j++){
-      printf("% 4d", f(n, n - j - 1, i)*n + f(n, j, i) + 1);
-      fflush(stdout);
-    }
-    putchar('\n');
-  }
-  printf("\n Magic Constant: %d.\n", (n*n+1)/2*n);
-
-  return 0;
-}
-```
-
-<!-- class="lia-code-stdout" -->
-```text
- 2  23  19  15   6
-14  10   1  22  18
-21  17  13   9   5
- 8   4  25  16  12
-20  11   7   3  24
-
-Magic Constant: 65.
-```
