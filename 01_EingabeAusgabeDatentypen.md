@@ -296,21 +296,6 @@ Seit dem C99 Standard existiert ein spezieller Datentyp `_Bool` für binäre
 Variablen. Zuvor konnte das Wertepaar `true` (für wahr) und `false` (für falsch)
 verwendet werden, die in der Headerdatei `<stdbool.h>` mit der Konstante 1 und 0 definiert sind.
 
-```cpp                     BoolExample.c
-#include <stdio.h>
-#include <stdbool.h>
-
-int main() {
-   _Bool a = true;
-   _Bool b = false;
-   _Bool c = 45;
-
-   printf("a = %i, b = %i, c = %i\n", a, b, c);
-   return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
 Sinnvoll sind boolsche Variablen insbesondere im Kontext von logischen
 Ausdrücken. Diese werden zum späteren Zeitpunkt eingeführt.
 
@@ -319,39 +304,9 @@ Ausdrücken. Diese werden zum späteren Zeitpunkt eingeführt.
 Der Operator `sizeof` gibt Auskunft über die Größe eines Datentyps oder einer
 Variablen in Byte.
 
-```cpp                     sizeof.c
-#include <stdio.h>
-
-int main(void)
-{
-  int x;
-  printf("x umfasst %d Byte.", (unsigned int)sizeof x);
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-
-```cpp                     sizeof_example.c
-#include <stdio.h>
-#include <limits.h>   /* INT_MIN und INT_MAX */
-
-int main(void) {
-   printf("int size : %d Byte\n", (unsigned int) sizeof( int ) );
-   printf("Wertebereich von %d bis %d\n", INT_MIN, INT_MAX);
-   printf("char size : %d Byte\n", (unsigned int) sizeof( char ) );
-   printf("Wertebereich von %d bis %d\n", CHAR_MIN, CHAR_MAX);
-   return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-
-{{1}}
 Die implementierungspezifische Werte, wie die Grenzen des Wertebereichs der
 ganzzahlinen Datentypen sind in `limits.h` definiert, z.B.
 
-{{1}}
 | Makro    | Wert                   |
 |:---------|:-----------------------|
 |CHAR_MIN  |-128                    |
@@ -381,27 +336,6 @@ style=" width: 80%;
 
 Quelle: [Arithmetischer Überlauf (Autor: WissensDürster)](https://de.wikipedia.org/wiki/Arithmetischer_%C3%9Cberlauf#/media/File:4Bi-2Komplement.svg)
 
-{{1}}
-```cpp                     Overflow.c
-#include <stdio.h>
-#include <limits.h>   /* SHRT_MIN und SHRT_MAX */
-
-int main(){
-  short a = 30000;
-  unsigned short d;   //      0 bis 65535
-  signed short c;     // -32768 bis 32767
-  printf("unsigned short - Wertebereich von %d bis %d\n", 0, USHRT_MAX);
-  printf("short - Wertebereich von %d bis %d\n", SHRT_MIN, SHRT_MAX);
-  c = 3000 + a;
-  printf("c=%d\n", c);
-  d = 3000 + a;
-  printf("c=%d\n", d);
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-
-{{1}}
 Ganzzahlüberläufe in der fehlerhaften Bestimmung der Größe eines
 Puffers oder in der Adressierung eines Feldes können es einem Angreifer
 ermöglichen den Stack zu überschreiben.
@@ -475,19 +409,6 @@ Anwendungsbeispiele:
 * Rückgabewert einer Funktion
 * Parameter einer Funktion
 * anonymer Zeigertyp `void*`
-
-```cpp
-int main(void) {
-	//Anweisungen
-  return 0;
-}
-```
-
-```cpp
-void funktion(void) {
-	//Anweisungen
-}
-```
 
 ### Wertspezifikation
 
@@ -585,21 +506,6 @@ int main(void)
 Die Lebensdauer einer Variablen gilt bis zum Ende des Anweisungsblockes,
 in dem sie definiert wurde.
 
-```cpp                           lifespan.c
-#include<stdio.h>
-
-int main(void){
-  {
-    int v;
-    v = 2;
-    printf("%d", v);
-  }
-  printf("%d", v);
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
 Die automatischen Variablen können mit dem Schlüsselwort `auto` deklariert
 werden, aber auch ohne Schlüsselwort sind "lokale" Variable "automatisch".
 
@@ -613,14 +519,11 @@ Diese Interpretation des Schlüsselworts `static` gilt aber nur für die innerha
 `static`-Variablen im Zusammenhang mit Funktionen, werden deswegen in der
 Funktionen gewidmeten Vorlesung behandelt.
 
-    {{1}}
 Nicht diskutiert wird an dieser Stellen die Lebensdauer von thread- und
 allocated-Variablen.
 
-    {{1}}
 **`register`-Variablen**
 
-    {{1}}
 Das Schlüsselwort `register` weist den Compiler an, eine Variable so lange wie
 möglich im Prozessorregister zu halten. Die Entscheidung darüber trifft der
 Compiler letztendlich selbst.
@@ -638,42 +541,10 @@ Wird eine Variable/Konstante z. B. im Kopf einer Schleife vereinbart, gehört si
 laut C99-Standard zu dem Block, in dem auch der Code der Schleife steht.
 Folgender Codeausschnitt soll das verdeutlichen:
 
-```cpp                           visibility.c
-#include<stdio.h>
-
-int main(void)
-{
-  int v = 1;
-  int w = 5;
-  {
-    int v;
-    v = 2;
-    printf("%d\n", v);
-    printf("%d\n", w);
-  }
-  printf("%d\n", v);
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-#### lobale Variablen
+#### Globale Variablen
 
 Muss eine Variable immer innerhalb von `main` definiert werden? Nein, allerdings
 sollten globale Variablen vermieden werden.
-
-```cpp                           visibility.c
-#include<stdio.h>
-
-int v = 1; /*globale Variable*/
-
-int main(void)
-{
-  printf("%d\n", v);
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
 
 Sichtbarkeit und Lebensdauer spielen beim Definieren neuer Funktionen eine
 wesentliche Rolle und werden in einer weiteren Vorlesung in diesem
@@ -702,77 +573,6 @@ Das Schlüsselwort `extern` in obigem Beispiel besagt, dass die Definition der
 Variablen `a` irgendwo in einem anderen Modul des Programms liegt. So deklariert
 man Variablen, die später beim Binden (Linken) aufgelöst werden. Da in diesem
 Fall kein Speicherplatz reserviert wurde, handelt es sich um keine Definition.
-
-### Typische Fehler
-
-**Fehlende Initialisierung**
-
-```cpp                     MissingInitialisation.c
-#include<stdio.h>
-
-void foo() {
-  int a;     // <- Fehlende Initialisierung
-  printf("a=%d ", a);
-}
-
-int main(void) {
-  int x = 5;
-  printf("x=%d ", x);
-  int y;     // <- Fehlende Initialisierung
-  printf("y=%d ", y);
-  foo();
-	return 0;
-}
-```
-@LIA.evalWithDebug(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-{{1}}
-**Redeklaration**
-
-{{1}}
-```cpp                     Redeclaration.c
-#include<stdio.h>
-
-int main(void) {
-  int x;
-  int x;
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-
-{{2}}
-**Falsche Zahlenliterale**
-
-{{2}}
-```cpp                     wrong_float.c
-#include<stdio.h>
-
-int main(void) {
-  float a=1,5;   /* FALSCH  */
-  float b=1.5;   /* RICHTIG */
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-
-{{3}}
-**Was passiert wenn der Wert zu groß ist?**
-
-{{3}}
-```cpp                     TooLarge.c
-#include<stdio.h>
-
-int main(void) {
-  short a;
-  a = 0xFFFF + 2;
-  printf("Schaun wir mal ... %hi\n", a);
-	return 0;
-}
-```
-@LIA.evalWithDebug(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
 
 ## Compiler
 
@@ -944,20 +744,6 @@ int main(){
 | `\'`    | single quotation mark |
 | `\"`    | double quotation mark |
 
-```cpp                             printf_esc_sequences.c
-#include <stdio.h>
-
-int main(){
-  printf("123456789\r");
-  printf("ABCD\n\n");
-	printf("Vorname \t Name \t\t Alter \n");
-	printf("Andreas \t Mustermann\t 42 \n\n");
-	printf("Manchmal braucht man auch ein \"\\\"\n");
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
 ### `getchar`
 
 Die Funktion `getchar()` liest Zeichen für Zeichen aus einem Puffer. Dies
@@ -1003,16 +789,3 @@ int main(){
 ```
 @LIA.evalWithDebug(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
 
-
-## Ausblick
-
-```cpp                     GoodBy.c
-#include<stdio.h>
-
-int main() {
-  printf("... \t bis \n\t\t zum \n\t\t\t");
-  printf("naechsten \n\t\t\t\t\t mal! \n");
-	return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
