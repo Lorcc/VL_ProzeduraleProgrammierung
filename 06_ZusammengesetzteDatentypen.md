@@ -70,10 +70,10 @@ Mit dem Präprozessoraufruf werden die Inhalte der Header-Files in unseren Code
 kopiert. Dieser wird dadurch um ein vielfaches größer, umfasst nun aber alle
 Funktionsdeklarationen, die genutzt werden sollen.
 
-# 1 "/usr/include/x86_64-linux-gnu/bits/types.h" 1 3 4
-# 27 "/usr/include/x86_64-linux-gnu/bits/types.h" 3 4
-# 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
-# 28 "/usr/include/x86_64-linux-gnu/bits/types.h" 2 3 4
+ 1 "/usr/include/x86_64-linux-gnu/bits/types.h" 1 3 4
+ 27 "/usr/include/x86_64-linux-gnu/bits/types.h" 3 4
+ 1 "/usr/include/x86_64-linux-gnu/bits/wordsize.h" 1 3 4
+ 28 "/usr/include/x86_64-linux-gnu/bits/types.h" 2 3 4
 
 Warum muss vermieden werden, dass headerfiles kreuzweise eingebunden werden?
 
