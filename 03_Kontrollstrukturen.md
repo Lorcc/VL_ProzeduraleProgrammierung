@@ -17,55 +17,6 @@ import: https://github.com/liascript/CodeRunner
 
 # Kontrollstrukturen
 
-Die interaktive Version des Kurses ist unter diesem [Link](https://liascript.github.io/course/?https://raw.githubusercontent.com/SebastianZug/VL_ProzeduraleProgrammierung/master/03_Kontrollstrukturen.md#1) zu finden.
-
-**Wie weit waren wir gekommen?**
-
-<div>
-  <wokwi-pushbutton color="green" pin="2"  port="D"></wokwi-pushbutton>
-  <wokwi-pushbutton color="red"   pin="3"  port="D"></wokwi-pushbutton>
-  <wokwi-pushbutton color="blue"  pin="4"  port="D"></wokwi-pushbutton>
-  <wokwi-led color="red"   pin="13" port="B" label="13"></wokwi-led>
-</div>
-
-```cpp       ButtonLogic.cpp
-//#include "iso646.h"
-
-void setup() {
-  Serial.begin(115200);
-  pinMode(2, INPUT);
-  pinMode(3, INPUT);
-  pinMode(4, INPUT);
-  pinMode(13, OUTPUT);
-}
-
-void loop() {
-  // a b c | y
-  // 0 0 0 | 0
-  // 0 0 1 | 1
-  // 0 1 0 | 1
-  // 0 1 1 | 0
-  // 1 0 0 | 1
-  // 1 0 1 | 0
-  // 1 1 0 | 0
-  // 1 1 1 | 0
-
-  bool a = digitalRead(2);
-  bool b = digitalRead(3);
-  bool c = digitalRead(4);
-
-  if (((!a) && (!b) && (c)) || ((!a) && (b) && (!c)) || ((a) && (!b) && (!c))) {
-    digitalWrite(13, HIGH);
-
-  }
-  else{
-    digitalWrite(13, LOW);
-  }
-  delay(250);
-}
-```
-@AVR8js.sketch
-
 **Inhalt der heutigen Veranstaltung**
 
 * Fortsetzung der Besprechung der Operatoren
@@ -115,26 +66,6 @@ Dabei sind einschränkende Konvertierungskonfigurationen kritisch zu sehen:
 * Der Verleich von `signed`- und `unsigned`-Typen kann zum falschen Ergebnis
   führen. So kann beispielsweise `-1 > 1U` wahr sein.
 
-```cpp                     NumberFormats.c
-#include <stdio.h>
-
-int main()
-{
-  int i = -1;
-  unsigned int limit = 200;
-
-  if ( i > limit ){
-    printf(" i > limit!!! \n");
-  }
-  else{
-    printf("Kein Problem!\n");
-  }
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-
 {{1}}
 **Konvertierung zu `_Bool`**
 
@@ -173,37 +104,8 @@ Beim Konvertieren des Wertes von einem in das andere `int`-Typ
 >
 > C99 Standard
 
-{{2}}
-```cpp                     NumberFormats.c
-#include <stdio.h>
-
-int main()
-{
-  float f=3.14;
-  int i=f;
-  printf("float value = %f / Integer-Anteil %d \n", f, i);
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
 {{3}}
 > **Achtung:** Implizite Typumwandlungen bergen erhebliche Risiken in sich!
-
-{{3}}
-```cpp                     Overflow.c
-#include <stdio.h>
-
-int main()
-{
-  float f = -3.14;
-  unsigned int i = f;
-  printf("float value = %f / Integer-Anteil %u \n", f, i);
-  printf("float value = %f / Integer-Anteil %d \n", f, i);
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
 
 {{3}}
 Die Headerdatei `<fenv.h>` definiert verschiedene Einstellungen für das Rechnen
@@ -216,25 +118,6 @@ Gleitpunkt-Arithmetiken über entsprechende Makros anpassen.
 
 Anders als bei der impliziten Typumwandlung wird bei der expliziten
 Typumwandlung der Zieldatentyp konkret im Code angegeben.
-
-```c
-(Zieltyp) ausdruck;
-```
-
-```cpp                    VolumeSphere.c
-#include <stdio.h>
-
-int main()
-{
-  int i = 3;
-  int j = 4;
-  printf("int i / int j   = %d \n", i / j);
-  printf("float(i / j)    = %f \n", (float)(i / j));
-  printf("float i / int j = %f \n", (float) i / j);
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
 
 Im Beispiel wird in der ersten `printf`-Anweisung das Ergebnis der ganzzahlegen
 Division `i/j` in `float` konvertiert, in der zweiten `printf`-Anweisung die
@@ -286,64 +169,15 @@ erweitert werden.
 Zum Anweisungsblock werden die Anweisungen mit geschweiften Klammern (`{` und
 `}`) zusammengefasst.
 
-```c
-if(Bedingung) Anweisung;  // <- Einzelne Anweisung
-
-if(Bedingung){            // <- Beginn Anweisungsblock
-   Anweisung;
-   Anweisung;
-}                         // <- Ende Anweisungsblock
-```
-
 Optional kann eine alternative Anweisung angegeben werden, wenn die Bedingung
 nicht erfüllt wird:
 
-```c
-if(Bedingung){
-  Anweisung;
-}else{
-  Anweisung;
-}
-```
-
-{{1}}
 Mehrere Fälle können verschachtelt abgefragt werden:
 
-{{1}}
-```c
-if(Bedingung)
-  Anweisung;
-else
-  if(Bedingung)
-    Anweisung;
-  else
-    Anweisung;
-    Anweisung;     //!!!
-```
-
-{{1}}
 > **Merke**: An diesem Beispiel wird deutlich, dass die Klammern für die
 > Zuordnung elementar wichtig sind. Die letzte Anweisung gehört NICHT zum zweite
 > `else` Zweig sondern zum ersten!
 
-{{1}}
-```cpp                     IfExample.c
-#include <stdio.h>
-
-int main(){
-	char c = 5;
-  if ((c < 10) && (c > 0)){
-    printf("Die Aussage ist wahr.\n");
-    if (c == 5){
-      printf("Auch diese Aussage ist wahr!\n");
-    }
-  }
-	return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-       {{2}}
 ************************************************************************
 **Weitere Beispiele für Bedingungen**
 
@@ -358,9 +192,6 @@ formuliert werden.
 | `if ((a-b))` | `ìf (a != b)`                                   |
 | `if (a & b)` | $a>0$, $b>0$, mindestens ein $i$ mit $a_i==b_i$ |
 
-************************************************************************
-
-        {{3}}
 ************************************************************************
 
 **Mögliche Fehlerquellen**
@@ -387,71 +218,9 @@ werden sollen. Das Ergebnis der "expression"-Auswertung soll eine Ganzzahl
 überein, wird die Ausführung an dem entsprechenden `case`-Zweig fortgesetzt.
 Trifft keine der Bedingungen zu, wird der `default`-Fall aktiviert.
 
-```c
-switch(expression)
- {
-   case const-expr: Anweisung break;
-   case const-expr:
-      Anweisungen
-      break;
-   case const-expr: Anweisungen break;
-   default: Anweisungen
- }
-```
-
-{{1}}
-```cpp                     SwitchExample.c
-#include <stdio.h>
-
-int main() {
-  int a=50, b=60;
-  char operator;
-  printf("Bitte Operator definieren (+,-,*,/): ");
-  operator = getchar();
-
-  switch(operator) {
-    case '+':
-      printf("%d + %d = %d \n",a ,b , a+b);
-      break;
-    case '-':
-      printf("%d - %d = %d \n", a, b, a-b);
-      break;
-    case '*':
-      printf("%d * %d = %d \n", a, b, a*b);
-      break;
-    case '/':
-      printf("%d / %d = %d \n", a, b, a/b);
-      break;
-    default:
-      printf("%c? kein Rechenoperator \n", operator);
-  }
-
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-
-{{2}}
 Im Unterschied zu einer `if`-Abfrage wird in den unterschiedlichen Fällen immer
 nur auf Gleichheit geprüft! Eine abgefragte Konstante darf zudem nur einmal
 abgefragt werden und muss ganzzahlig oder `char` sein.
-
-{{2}}
-```cpp
-// Fehlerhafte case Blöcke
-switch(x)
-{
-   case x < 100: // das ist ein Fehler
-     y = 1000;
-  break;
-
-  case 100.1: // das ist genauso falsch
-     y = 5000;
-     z = 3000;
-  break;
-}
-```
 
 {{3}}
 Und wozu brauche ich das `break`? Ohne das `break` am Ende eines Falls werden
@@ -461,34 +230,6 @@ zwingend ausgeführt.
 {{3}}
 Unter Ausnutzung von `break` können Kategorien definiert werden, die aufeinander
 aufbauen und dann übergreifend "aktiviert" werden.
-
-{{3}}
-```cpp                     MovementDetection.c
-#include <stdio.h>
-
-// Bewegung im Schlafzimmer - dort Licht an und im Bad;
-// Bewegung im Flur - dort Licht an und im Wohnzimmer;
-
-int main() {
-  char room    = 'S';  // Schafzimmer
-
-  printf("Licht an im/in ... ");
-  switch(room) {
-    case 'S': printf("Schlafzimmer \n");
-    case 'B': printf("Bad \n");
-              break;
-    case 'F': printf("Flur \n");
-    case 'W': printf("Wohnzimmer \n");
-              break;
-    case 'K': printf("Kueche \n");
-              break;
-    default:  printf("Fehler!\n");}
-
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
 
 ### Schleifen
 
@@ -564,37 +305,8 @@ eines Ausdrucks evaluiert zu werden. Es wird überprüft, ob die Schleife
 fortgesetzt oder abgebrochen werden soll. Letzterer Fall tritt ein, wenn dieser
 den Wert 0 annimmt – also der Ausdruck false (falsch) ist.
 
-```c
-// generisches Format der for-Schleife
-for(Initialisierung; Bedingung; Reinitialisierung) {
-   // Anweisungen
-}
-
-// for-Schleife als Endlosschleife
-for(;;){
-   // Anweisungen
-}
-```
-
-```cpp                     ForLoopExample.c
-#include <stdio.h>
-
-int main(){
-	int i;
-  for (i = 1; i<10; i++)
-    printf("%d ", i);
-
-  printf("\nNach der Schleife hat i den Wert %d\n" ,i);
-	return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-
-{{1}}
 **Beliebte Fehlerquellen**
 
-{{1}}
 * Semikolon hinter der schließenden Klammer von `for`
 * Kommas anstatt Semikolons zwischen den Parametern von `for`
 * fehlerhafte Konfiguration von Zählschleifen
@@ -607,94 +319,17 @@ Während bei der `for`-Schleife auf ein n-maliges Durchlaufen Anweisungsfolge
 konfiguriert wird, definiert die `while`-Schleife nur eine Bedingung für den
 Fortführung/Abbruch.
 
-```c
-// generisches Format der while-Schleife
-while (Bedingung)
-  Anweisungen;
-
-while (Bedingung){
-    Anweisungen;
-    Anweisungen;
-}
-```
-
-```cpp                     count_spaces.c
-#include <stdio.h>
-
-int main(){
-  int c;
-  int zaehler = 0;
-  printf("Leerzeichenzähler - zum Beenden \"_\" [Enter]\n");
-  while((c = getchar()) != '_')
-  {
-    if(c == ' ')
-      zaehler++;
-  }
-  printf("Anzahl der Leerzeichen: %d\n", zaehler);
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-{{1}}
 Dabei soll erwähnt werden, dass eine `while`-Schleife eine `for`-Schleife
 ersetzen kann.
 
-{{1}}
-```cpp
-// generisches Format der while-Schleife
-i = 0;
-while (i<10){
-   // Anweisungen;
-   i++;
-}
-
-for (i=0; i<10; i++){
-   // Anweisungen;
-}
-```
 
 #### `do-while`-Schleife
 
 Im Gegensatz zur `while`-Schleife führt die `do-while`-Schleife die Überprüfung
 des Abbruchkriteriums erst am Schleifenende aus.
 
-```cpp
-// generisches Format der while-Schleife
-do
-   Anweisung;
- while (Bedingung);
-```
-
 Welche Konsequenz hat das? Die `do-while`-Schleife wird in jedem Fall einmal
 ausgeführt.
-
-{{1}}
-```cpp                     GetChar.c
-#include <stdio.h>
-
-int main(){
-	char auswahl;
-	printf("Naechster Menuepunkt? ");
-  printf("-1- Auswahl1\n");
-  printf("-2- Auswahl2\n");
-  printf("-3- Auswahl3\n");
-  printf("-4- Programmende \n\n");
-  printf("\n\n Ihre Auswahl: ");
-
-  do {
-     scanf("%d", &auswahl);
-     switch(auswahl) {
-        case 1  : printf("\n Das war Auswahl 1 \n"); break;
-        case 2  : printf("\n Das war Auswahl 2 \n"); break;
-        case 3  : printf("\n Das war Auswahl 3 \n"); break;
-        case 4  : printf("\n Programmende \n"); break;
-        default : printf("\n Unbekannte Auswahl \n");
-     }
-  } while(auswahl!=4);
-	return 0;
-}
-```
 
 ### Kontrolliertes Verlassen der Anweisungen
 
@@ -702,42 +337,10 @@ Bei allen drei Arten der Schleifen kann zum vorzeitigen Verlassen der Schleife
  `break` benutzt werden. Damit wird aber nur die unmittelbar umgebende Schleife
  beendet!
 
-```cpp                     breakForLoop.c
-#include <stdio.h>
-
-int main(){
-	int i;
-  for (i = 1; i<10; i++){
-      if (i == 5) break;
-      printf("%d ", i);
-  }
-  printf("\nUnd vorbei ... i ist jetzt %d\n" ,i);
-	return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-{{1}}
 Eine weitere wichtige Eingriffsmöglichkeit für Schleifenkonstrukte bietet
 `continue`. Damit wird nicht die Schleife insgesamt, sondern nur der aktuelle
 Durchgang gestoppt.
 
-{{1}}
-```cpp                     continueForLoop.c
-#include <stdio.h>
-
-int main(){
-	int i;
-  for (i = -5; i<6; i++){
-      if (i == 0) continue;
-      printf("%5.1f \n", 12. / i);
-  }
-	return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-{{2}}
 Durch `return`- Anweisung wird das Verlassen einer Funktion veranlasst (genaues
 in der Vorlesung zu Funktionen).
 
@@ -753,20 +356,6 @@ eine nahezu beliebige Auflösung der Ordnung des Codes möglich.
 > * `goto` can be rewritten to avoid them.*
 >
 > [Tutorialspoint](https://www.tutorialspoint.com/cprogramming/c_goto_statement.html)
-
-```cpp                     gotoExample.c
-#include <stdio.h>
-
-int main(){
-	int i;
-  label:
-       printf("%d ", i);
-       i++;
-       if (i <= 10) goto label;
-	return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
 
 Ein wichtiger Fehler, der häufig immer mit goto in Verbindung gebracht wird, hat
 aber eigentlich nichts damit zu tun
