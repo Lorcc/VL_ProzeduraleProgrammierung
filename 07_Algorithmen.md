@@ -17,82 +17,6 @@ import: https://github.com/liascript/CodeRunner
 
 # Standardalgorithmen in C
 
-Die interaktive Version des Kurses ist unter diesem [Link](https://liascript.github.io/course/?https://raw.githubusercontent.com/SebastianZug/VL_ProzeduraleProgrammierung/master/07_Algorithmen.md#1) zu finden.
-
-**Wie weit waren wir gekommen?**
-
-Das folgende Beispiel wiederholt die Verwendung von `typedef` und `stuct` innerhalb eines Arrays für eine Ampelsteuerung.
-
-<!--
-style="width: 80%; max-width: 460px; display: block; margin-left: auto; margin-right: auto;"
--->
-```ascii
-                  .-- 3s --. .-- 1s --. .-- 3s --.
-                  |        | |        | |        |
-                  |        v |        v |        v
-                 .-.       .-.        .-.       .-.
- Ampelzustände  ( 0 )     ( 1 )      ( 2 )     ( 3 )
-                 '-'       '-'        '-'       '-'
-                  ^                              |
-                  |                              |
-                  .------------- 1s -------------.
-
-                 RED  RED/YELLOW     GREEN     YELLOW
-````
-
-<div>
-  <wokwi-led color="red"    pin="13" port="B" label="13"></wokwi-led>
-  <wokwi-led color="yellow" pin="12" port="B" label="13"></wokwi-led>
-  <wokwi-led color="green"  pin="11" port="B" label="13"></wokwi-led>
-  <span id="simulation-time"></span>
-</div>
-
-```cpp       TrafficLights.cpp
-typedef struct {
-    int state;
-    int next;
-    int A_red;
-    int A_yellow;
-    int A_green;
-    int timer;
-} ampel_state_t;
-
-ampel_state_t state_table[4] = {
-
-// state     A_red             timer
-//  |   next  |  A_yellow       |
-//  |    |    |   |    A_green  |
-//----------------------------------------------
-{   0,   1,   1,  0,    0,      3},
-{   1,   2,   1,  1,    0,      1 },
-{   2,   3,   0,  0,    1,      3},
-{   3,   0,   0,  1,    0,      1,}
-};
-
-const int greenPin = 13;
-const int yellowPin = 12;
-const int redPin = 11;
-int state = 0;
-
-void setup() {
-  pinMode(greenPin, OUTPUT);
-  pinMode(yellowPin, OUTPUT);
-  pinMode(redPin, OUTPUT);
-}
-
-void loop() {
-  if (state_table[state].A_red == 1) digitalWrite(redPin, HIGH);
-  else digitalWrite(redPin, LOW);
-  if (state_table[state].A_yellow == 1) digitalWrite(yellowPin, HIGH);
-  else digitalWrite(yellowPin, LOW);
-  if (state_table[state].A_green == 1) digitalWrite(greenPin, HIGH);
-  else digitalWrite(greenPin, LOW);
-  delay(state_table[state].timer*1000);
-  state =  state_table[state].next;
-}
-```
-@AVR8js.sketch
-
 **Inhalt der heutigen Veranstaltung**
 
 * Zusammenfassender Überblick zum bisher gelernten
@@ -131,26 +55,6 @@ int main() {
 Dieses Programm ist langsamer als eine konventionelle Darstellung in einer Schleife, weil mit dem Aufruf jeder Funktion ein eigener Speicherplatz zum Anlegen von Parametern, lokalen Variablen, Rückgabewerten und Rücksprungadressen belegt wird.
 
 Gleichzeitig steigt aber die Lesbarkeit und Kompaktheit des Codes!
-
-```cpp      Rekursion2.c
-#include<stdio.h>
-
-int fakultaet(int x) {
-	if(x > 1) {
-		return x * fakultaet(x-1);
-	}else {
-		return 1;
-	}
-}
-
-int main() {
-	int a = 6;
-	printf("Fakultaet von %d ist %d\n", a, fakultaet(a));
-	return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
 
 ## Algorithmusbegriff
 
@@ -220,95 +124,6 @@ Der erste für einen Computer gedachte Algorithmus (zur Berechnung von Bernoulli
 
 Bestimmen Sie aus drei Zahlenwerten den größten und geben Sie diesen aus $max(n_0, n_1, n_2)$.
 
-```cpp      LargestNumber.c
-#include <stdio.h>
-#include <stdlib.h>
-
-int main(void) {
-  double n1, n2, n3;
-
-  printf("Geben Sie drei Zahlenwerte ein: \n");
-  scanf("%lf %lf %lf", &n1, &n2, &n3);
-  printf("Eingegebene Zahlen %f %f %f \n", n1, n2, n3);
-
-  if( n1>=n2 && n1>=n3 )
-      printf("%f is the largest number.", n1);
-
-  if( n2>=n1 && n2>=n3 )
-      printf("%f is the largest number.", n2);
-
-  if( n3>=n1 && n3>=n2 )
-      printf("%f is the largest number.", n3);
-
-    return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-Welche Verbesserungsmöglichkeit sehen Sie für diesen Lösungsansatz?
-
-| Aspekt               | Kritik                                                                |
-|:-------------------- |:--------------------------------------------------------------------- |
-| Userinterface        | Es erfolgt keine Prüfung der Eingaben!                                |
-| Design               | Die Ausgabe erfolgt in 3 sehr ähnlichen Aufrufen.                     |
-| Algorithmus          | Es werden 6 Vergleichsoperationen und 3 logische Operationen genutzt. |
-| Wiederverwendbarkeit | Die Funktion implementiert die Suche für genau 3 Eingaben.            |
-
-Eine Lösung, die die ersten 3 genannten Kritikpunkte adressiert, könnte wie folgt
-entworfen werden:
-
-```cpp                       Compare3Values.c
-#include <stdio.h>
-#include <stdlib.h>
-
-int main(void) {
-  double n1, n2, n3;
-  double result = 0;
-
-  printf("Geben Sie drei Zahlenwerte ein: \n");
-  if (scanf("%lf %lf %lf", &n1, &n2, &n3) == 3){
-    printf("Eingegebene Zahlen %f %f %f \n", n1, n2, n3);
-    if( n1>=n2 && n1>=n3 ){
-      result = n1;
-    }
-    else{
-      if( n2>=n3){result = n2;}
-      else {result = n3;}
-    }
-    printf("Größter Wert ist %.1f\n", result);
-  }else{
-    printf("Ungültige Eingabe!");
-  }
-  return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-Ein alternativer Ansatz kann mit Hilfe von Makrooperationen umgesetzt werden,
-die eine `MAX`-Methode implementieren.
-
-```cpp                  Compare3ValuesWithMacro.c
-#include <stdio.h>
-#include <stdlib.h>
-
-#define MAX(x, y) (((x) > (y)) ? (x) : (y))
-
-int main(void) {
-  double n1, n2, n3;
-  double result = 0;
-
-  printf("Geben Sie drei Zahlenwerte ein: \n");
-  if (scanf("%lf %lf %lf", &n1, &n2, &n3) == 3){
-    printf("Eingegebene Zahlen %f %f %f \n", n1, n2, n3);
-    result = MAX(MAX(n1, n2),n3);
-    printf("Größter Wert ist %.1f\n", result);
-  }else{
-    printf("Ungültige Eingabe!");
-  }
-  return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
 
 Darfs auch etwas mehr sein? Wie lösen wir die gleiche Aufgabe für größere Mengen
 von Zahlenwerten $max(n_0, ... n_k)$ ? Entwerfen Sie dazu folgende Funktionen:
@@ -319,99 +134,6 @@ von Zahlenwerten $max(n_0, ... n_k)$ ? Entwerfen Sie dazu folgende Funktionen:
 die zunächst gleichverteilte Werte zwischen `MAXVALUE` und `MINVALUE` befüllt
 und dann die Häufigkeit des größten Wertes ermittelt.
 
-```cpp                     FindMaxInArray.c
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-
-#define MAXVALUE 100
-#define MINVALUE 5
-#define SAMPLES 50
-
-void generateRandomArray(int * ptr){
-  srand(time(NULL));
-  for (int i = 0; i< SAMPLES; i++){
-      ptr[i] = rand() % (MAXVALUE - MINVALUE + 1) + MINVALUE;
-  }
-}
-
-int maxValue(int *ptr){
-  int max = 0;
-  for (int i = 0; i< SAMPLES; i++){
-      if (ptr[i] > max) {
-        max = ptr[i];
-      }
-  }
-  return max;
-}
-
-void printArray(int *ptr, int maxValue){
-  for (int i = 0; i< SAMPLES; i++){
-    if ((i>0) && (i%10==0)) {
-      printf("\n");
-    }
-    if (ptr[i]!=maxValue){
-      printf(" %3d ", ptr[i]);
-    }else{
-      printf("[%3d]", ptr[i]);
-    }
-  }
-}
-
-int main(void){
-  int samples[SAMPLES] = {0};
-  generateRandomArray(samples);
-  int max = maxValue(samples);
-  //int count = 0;     // Aufgabenteil 2
-  //int max = maxValue(samples, &count);
-  printArray(samples, max);
-  printf("\nIm Array wurde %d als Maximum gefunden!", max);
-  return(EXIT_SUCCESS);
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
-Aufgabenteil 2: Erweitern Sie die Funktionalität von `maxValue()` um die Rückgabe
-der Häufigkeit des Auftretens des maximalen Wertes. Ein Kommilitone schlägt folgende Lösung vor:
-
-```cpp
-int maxValue(int *ptr, int *count){
-  int max = 0;
-  for (int i = 0; i< SAMPLES; i++){
-      if (ptr[i] > max) {
-        max = ptr[i];
-        *count = 1;
-      }
-      if (ptr[i] == max) {
-        (*count)++;
-      }
-  }
-  return max;
-}
-```
-
-Bewerten Sie diese und entwerfen Sie ggf. eine alternative Implementierung.
-
-Für alle, die mit dem Knobeln fertig sind, hier noch eine kurze Auflösung. Dadurch, dass beim 
-Auftreten eines neuen Maximums in der ersten Verzweigung max dem neuen Wert zugeordnet wird,
-rutschen wir automatisch auch in die zweite Verzweigung, wodurch der Wert von max immer eins
-größer sein wird, als wir wollen. Eine Lösung von vielen für diese Problematik ist folgende:
-
-```cpp
-int maxValue(int *ptr, int *count){
-  int max = 0;
-  for (int i = 0; i< SAMPLES; i++){
-      if (ptr[i] > max) {
-        max = ptr[i];
-        *count = 1;
-      }
-      else if (ptr[i] == max) {
-        (*count)++;
-      }
-  }
-  return max;
-}
-```
 
 ## Sortieren
 
@@ -488,72 +210,11 @@ int main(void){
 
 Welche Konsequenz hat dieses Verhalten?
 
-********************************************************************************
-
-                 {{1-3}}
-********************************************************************************
-
 **BubbleSort**
 
 Die Informatik kennt eine Vielzahl von Sortierverfahren, die unterschiedliche
 Eigenschaften aufweisen. Ein sehr einfacher Ansatz ist BubbleSort, der
 namensgebend die größten oder kleinsten Zahlen Gasblasen gleich aufsteigen lässt.
-
-![BubbleSort](./images/07_Algorithmen/330px-Bubblesort_Animation.gif)<!-- width="50%" -->[^1]
-
-_Bubble-Sort Algorithmus in grafischer Repräsentation_
-
-[^1]: Stummvoll, https://de.wikipedia.org/wiki/Bubblesort#/media/File:Bubblesort_Animation.gif
-
-```cpp  BubbleSort.c
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
-#define MAXVALUE 100
-#define MINVALUE 5
-#define SAMPLES 20
-
-void generateRandomArray(int *ptr) {
-  srand(time(NULL));
-  for (int i = 0; i< SAMPLES; i++){
-      ptr[i] = rand() % (MAXVALUE - MINVALUE + 1) + MINVALUE;
-  }
-}
-
-void bubble(int *array) {
-  int n_samples = SAMPLES;
-  int temp;
-  while(n_samples--){
-    for(int i = 1; i <= n_samples; i++){
-     if(array[i-1] > array[i]) {
-      temp=array[i];
-      array[i]=array[i-1];
-      array[i-1]=temp;
-     }
-    }
-  }
-}
-
-void printArray(int *ptr){
-  for (int i = 0; i< SAMPLES; i++){
-    if ((i>0) && (i%10==0)) {
-      printf("\n");
-    }
-    printf("%3d ", ptr[i]);
-  }
-  printf("\n");
-}
-
-int main(void) {
-  int samples[SAMPLES] = {0};
-  generateRandomArray(samples);
-  bubble(samples);
-  printArray(samples);
-  return(EXIT_SUCCESS);
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
 
 Worin unterscheidet sich dieser Ansatz von dem vorhergehenden?
 
@@ -564,19 +225,11 @@ von Gauss kann gezeigt werden, dass im Falle der umgekehrt sortierten Liste werd
 
 Welches Optimierungspotential sehen Sie?
 
-********************************************************************************
-
-                 {{2-3}}
-********************************************************************************
-
 In den Code sollte ein Abbruchkriterium integriert werden, wenn während eines
 Durchlaufes keine Änderungen vollzogen werden. Im günstigsten Fall lässt sich
 damit das Verfahren nach einem Durchlauf beenden.
 
-********************************************************************************
 
-                 {{3-4}}
-********************************************************************************
 
 **Quicksort**
 
@@ -633,69 +286,6 @@ Nach dem Tauschen von i und Pivot bezeichnet i die Trennstelle der Teillisten. B
 ```
 Darauf aufbauend wird der Algorithmus nun auf die beiden Teile "eiebeii" und "snp" angewand.
 
-```cpp  QuickSort.c
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
-#define MAXVALUE 100
-#define MINVALUE 5
-#define SAMPLES 20
-
-void generateRandomArray(int *ptr) {
-  srand(time(NULL));
-  for (int i = 0; i< SAMPLES; i++){
-      ptr[i] = rand() % (MAXVALUE - MINVALUE + 1) + MINVALUE;
-  }
-}
-
-void quicksort(int *ptr, int first, int last){
-   int i, j, pivot, temp;
-
-   if(first<last){
-      pivot=first;
-      i=first;
-      j=last;
-
-      while(i<j){
-         while(ptr[i]<=ptr[pivot]&&i<last)
-            i++;
-         while(ptr[j]>ptr[pivot])
-            j--;
-         if(i<j){
-            temp=ptr[i];
-            ptr[i]=ptr[j];
-            ptr[j]=temp;
-         }
-      }
-      temp=ptr[pivot];
-      ptr[pivot]=ptr[j];
-      ptr[j]=temp;
-      quicksort(ptr,first,j-1);
-      quicksort(ptr,j+1,last);
-   }
-}
-
-void printArray(int *ptr){
-  for (int i = 0; i< SAMPLES; i++){
-    if ((i>0) && (i%10==0)) {
-      printf("\n");
-    }
-    printf("%3d ", ptr[i]);
-  }
-  printf("\n");
-}
-
-int main(void) {
-  int samples[SAMPLES] = {0};
-  generateRandomArray(samples);
-  quicksort(samples, 0, SAMPLES);
-  printArray(samples);
-  return(EXIT_SUCCESS);
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
 Obwohl Quicksort im schlechtesten Fall quadratische Laufzeit hat, ist er in der Praxis einer der schnellsten Sortieralgorithmen.
 
 Die C-Standardbibliothek umfasst in der `stdlib.h` eine Implementierung von quicksort - `qsort()` an. Sie wurde in der vorangegangenen Vorlesung besprochen. Ein Anwendungsbeispiel finden Sie im nachfolgenden Abschnitt.
@@ -731,49 +321,7 @@ Wie würden Sie vorgehen, um in einer sortierten List einen bestimmten Eintrag z
 finden?
 
 ```cpp Search.c
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-
-#define MAXVALUE 100
-#define MINVALUE 5
-#define SAMPLES 20
-
-
-// Generieren der Zufallszahlen
-void generateRandomArray(int *ptr) {
-  srand(time(NULL));
-  for (int i = 0; i< SAMPLES; i++){
-      ptr[i] = rand() % (MAXVALUE - MINVALUE + 1) + MINVALUE;
-  }
-}
-
-// Sortieren des Arrays
-void bubble(int *array) {
-  int n_samples = SAMPLES;
-  int temp;
-  while(n_samples--){
-    for(int i = 1; i <= n_samples; i++){
-     if(array[i-1] > array[i]) {
-      temp=array[i];
-      array[i]=array[i-1];
-      array[i-1]=temp;
-     }
-    }
-  }
-}
-
-// Ausgabe
-void printArray(int *ptr){
-  for (int i = 0; i< SAMPLES; i++){
-    if ((i>0) && (i%10==0)) {
-      printf("\n");
-    }
-    printf("%3d ", ptr[i]);
-  }
-  printf("\n");
-}
-
+//shorted
 // Rekursive Suche
 int search (int *ptr, int pattern) {
   for (int i = 0; i< SAMPLES; i++){
@@ -890,46 +438,3 @@ int main (void) {
 @LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
 
 `bsearch` evaluiert die Existenz eines Eintrages, dabei ist es wichtig, den Rückgabewert auf den richtigen Typ des Eintrages zu casten.
-
-## Beispiel des Tages
-
-Schätzen Sie die Größe der Kreiszahl $\pi$ mittels Monte-Carlo-Simulation ab.
-Nutzen Sie dafür den Ansatz, dass bei der Projektion von $n$ gleichverteilten
-Paaren $(x,y)$ $\pi$ über den Anteil zwischen denjenigen Paaren innerhalb eines
-Quadranten unter dem Einheitskreis und denjenigen außerhalb bestimmt werden
-kann.
-
-Die Fläche des Quadrates ist $4$, der Flächenanteil des Kreises beträgt $1^2\cdot\pi$. Somit gilt
-
-$$\pi \approx \frac{count_{in}}{count_{all}}\cdot 4$$
-
-```cpp                          Integral.c
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <time.h>
-
-double bestimmePI(unsigned int samples){
-  double x, y, z;
-  int count = 0;
-  srand(time(NULL));
-  count=0;
-  for (int i=0; i<samples; i++) {
-     x = rand() / (double) RAND_MAX;
-     y = rand() / (double) RAND_MAX;
-     z = x*x+y*y;
-     if (x*x+y*y<1) count++;
-     }
-  return (double)count/samples*4;
-}
-
-int main(void) {
-  for (int number=5; number<15000; number=number+50){
-    printf("%3d, %f, %f\n", number,
-                            M_PI,
-                            bestimmePI(number));
-  }
-  return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
