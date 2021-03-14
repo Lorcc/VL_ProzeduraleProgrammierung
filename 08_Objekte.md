@@ -48,69 +48,6 @@ Die interaktive Version des Kurses ist unter diesem [Link](https://liascript.git
 
 Nehmen wir an, dass Sie einen Code entwickeln, der unterschiedliche Implementierungen vereint. Wir kombinieren dazu verschiedene Datentypen und Funktionen. Wie aber sieht es um die Übersichtlichkeit und Wiederverwendbarkeit aus?
 
-```cpp                 ZusammengesetzteDatenstrukturen.c
-#include <stdio.h>
-
-struct Datum
-{
-    int tag;
-    int monat;
-    int jahr;
-};
-
-int berechneZeitDiff(struct Datum TagA, struct Datum TagB){
-  //
-  return 1;
-}
-
-int bestimmeWochentag(struct Datum Tag){
-  //
-  return 1;
-}
-
-struct Person
-{
-    char name[25];
-    struct Datum geburtstag;
-    int telefonnummer;
-};
-
-typedef struct Person Freund;
-
-void printFreund(Freund freundA){
-  printf("%s - %d.%d.%d\n",freundA.name,
-                           freundA.geburtstag.tag,
-                           freundA.geburtstag.monat,
-                           freundA.geburtstag.jahr);
-}
-
-int zumGeburtstagAnrufen(Freund freund, struct Datum heute){
-  //
-  return 1;
-}
-
-void printFreundeskreis(Freund liste[], int size){
-  printf("Meinen Freunde: \n");
-  for (int i = 0; i < size; i++){
-    printFreund(liste[i]);
-  }
-}
-
-int main() {
-  Freund A = {"Peter", 1,1,2010, 1234};
-  Freund B = {.name = "Paul",
-              .geburtstag = {10, 1, 2013},
-              .telefonnummer = 56756 };
-  printFreund(A);
-
-  Freund meineFreunde[] = {0};
-  meineFreunde[0] = A;
-  meineFreunde[1] = B;
-  printFreundeskreis(meineFreunde, 2);
-}
-```
-@LIA.eval(`["main.c"]`, `gcc -Wall main.c -o a.out`, `./a.out`)
-
 > **Aufgabe: ** Erweitern Sie die Implementierung so, dass in der Methode `zumGeburtstagAnrufen()` anhand der Tage und Monatswerte der Geburtstage abgeprüft wird, ob der angerufene denn wirklich Geburtstag hat. Die Funktion soll eine "1" zurückgeben, wenn das der Fall ist.
 
 Das prozedurale Programmierparadigma zielt darauf imperative Programme in überschaubare Teile aufzugliedern. Diese Teile werden als Prozeduren (Unterprogramme, Routinen oder Funktionen) bezeichnet. Insgesamt soll damit sichergestellt werden, das der Programmcode übersichtlicher wird und unnötige Code-Wiederholungen vermieden werden. Durch die Abstraktion der Algorithmen stellt das prozedurale Software-Paradigma einen entscheidenden Schritt von einfachen Assemblersprachen hin zu komplexeren Hochsprachen dar.
@@ -139,74 +76,6 @@ C und C++ unterscheiden zu diesem Zweck zwei Dateitypen - die eigentliche Implem
 + eigene Typ-Definitionen (typedef struct, union, enum)
 
 > **Merke: ** Die Header-Files enthalten die Basisinformationen für die Nutzung die in den Code-Dateien enthaltene Implementierung.
-
-```c     -Datum.h
-#ifndef DATUM_H_INCLUDED
-#define DATUM_H_INCLUDED
-/* ^^ these are the include guards */
-
-struct Datum
-{
-    int tag;
-    int monat;
-    int jahr;
-};
-
-#endif
-```
-```c     -Person.h
-#include <stdio.h>
-#include "Datum.h"
-
-#ifndef PERSON_H_INCLUDED
-#define PERSON_H_INCLUDED
-
-struct Person
-{
-    char name[25];
-    struct Datum Geburtstag;
-    int telefonnummer;
-};
-
-void printPerson(struct Person freundA);
-
-#endif
-```
-```c     -Person.c
-#include "Person.h"
-
-void printPerson(struct Person freundA){
-  printf("%s - %d.%d.%d\n",freundA.name,
-                           freundA.Geburtstag.tag,
-                           freundA.Geburtstag.monat,
-                           freundA.Geburtstag.jahr);
-}
-
-```
-```c     +main.c
-#include "Person.h"
-
-void printFreundeskreis(struct Person liste [], int size){
-  printf("Meinen Freunde: \n");
-  for (int i = 0; i < size; i++){
-    printPerson(liste[i]);
-  }
-}
-
-int main() {
-  struct Person A = {"Peter", {1, 1, 2010}, 1234};
-  struct Person B = {.name = "Paul",
-              .Geburtstag = {10, 1, 2013},
-              .telefonnummer = 56756 };
-  printPerson(A);
-
-  struct Person meineFreunde[2] = {0};
-  meineFreunde[0] = A;
-  meineFreunde[1] = B;
-  printFreundeskreis(meineFreunde, 2);
-}
-```
-@LIA.eval(`["Datum.h", "Person.h", "Person.c", "main.c"]`, `gcc -Wall main.c Person.c Datum.h -o a.out`, `./a.out`)
 
 Wie erfolgt die Kompilierung in diesem Fall?
 
@@ -348,19 +217,6 @@ bekannt gegeben. Definiert werden sie als Komponente der Standard Template Libra
 
 Mit Namensräumen können Deklarationen und Definitionen unter einem Namen zusammengefasst und gegen andere Namen abgegrenzt werden.
 
-```cpp   iostream.cpp
-#include <iostream>
-
-int main(void) {
-  char hanna[]="Hanna";
-  char anna[]="Anna";
-  std::cout << "C++ stream: " << "Hallo "<< hanna << ", " << anna <<std::endl;
-  printf("C funktioniert auch hier %s", hanna);
-  return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out `, `./a.out`)
-
 Die Streams lassen sich nicht nur für die Standard Ein- und Ausgabe verwenden, sondern auch mit Dateien oder Zeichenketten.
 
 Mehr zu `iostream` unter
@@ -369,20 +225,6 @@ Mehr zu `iostream` unter
 **Echter string Typ**
 
 C++ implementiert einen separaten `string`-Datentyp (Klasse), die ein deutliche komfortableren Umgang mit Texten erlaubt. Beim Anlegen eines muss nicht angegeben werden, wie viele Zeichen reserviert werden sollen. Zudem könenn Strings einfach zuweisen und vergleichen werden, wie es für andere Datentypen üblich ist. Die C `const char *` Mechanismen funktionieren aber auch hier.
-
-```cpp   string.cpp
-#include <iostream>
-#include <string>
-
-int main(void) {
-  std::string hanna = "Hanna";
-  std::string anna = "Anna";
-  std::string alleBeide = anna + " + " + hanna;
-  std::cout<<"Hallo: "<<alleBeide<<std::endl;
-  return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out `, `./a.out`)
 
 **Referenzen und Zeiger**
 
@@ -396,59 +238,6 @@ rv++; //unterscheidet sich in Gebrauch nicht von einer Variable
 ```
 
 **Referenz-Parameter einer Funktion**
-
-Zeiger (Wiederholung)
-
-```cpp   pointer.cpp
-#include <stdio.h>
-#include <stdlib.h>
-
-void tauschen(char *anna, char *hanna){
-  char aux=*anna;
-  *anna=*hanna;
-  *hanna=aux;
-}
-
-int main(void) {
-  char anna='A',hanna='H';
-  printf("%c und %c\n", anna,hanna);
-  tauschen(&anna,&hanna);
-  printf("%c und %c\n", anna,hanna);;
-  return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out `, `./a.out`)
-
-Referenzen
-
-```cpp references.cpp
-#include <iostream>
-
-void tauschen(char &anna, char &hanna){
-  char aux=anna;
-  anna=hanna;
-  hanna=aux;
-}
-
-int main(void) {
-  char anna='A',hanna='H';
-  std::cout<<anna<<" "<<hanna<<std::endl;
-  tauschen(anna,hanna);
-  std::cout<<anna<<" "<<hanna<<std::endl;
-  return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out `, `./a.out`)
-
-Konstante Referenzen können innerhalb der Funktion nicht verändern werden.
-
-```cpp
-void tauschen(const char &anna, const char &hanna){
-  char aux=anna;
-  anna=hanna;//geht nicht
-  hanna=aux; //geht nicht
-}
-```
 
 Der Vorteil der Referenz-Parameter gegenüber den call-by-value-Parameter: es werden keine Kopien von Objekten (Variablen) angelegt.
 
@@ -482,84 +271,7 @@ Ein Zugriffsbezeichner ist eines der folgenden drei Schlüsselwörter: `private`
 
 Standardmäßig sind alle Members in der Klasse `private`!
 
-```cpp      FirstClassExample.cpp
-#include <iostream>
-
-class Datum
-{
-  public:
-    int tag;
-    int monat;
-    int jahr;
-
-    void print(){
-        std::cout << tag << "." << monat <<"." << jahr <<std::endl;
-    }
-};
-
-int main()
-{
-  // 1. Instanz der Klasse, Objekt myDatumA
-  Datum myDatumA;
-  myDatumA.tag = 12;
-  myDatumA.monat = 12;
-  myDatumA.jahr = 2000;
-  myDatumA.print();
-
-  // 2. Instanz der Klasse, Objekt myDatumB
-  // alternative Initialisierung
-  Datum myDatumB = {.tag = 12, .monat = 3, .jahr = 1920};
-  myDatumB.print();
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out `, `./a.out`)
-
 Und wie können wir weitere Methoden zu unserer Klasse hinzufügen?
-
-```cpp      AdditionalMethod.cpp
-#include <iostream>
-#include <ctime>
-
-class Datum{
-  public:
-    int tag;
-    int monat;
-    int jahr;
-
-    const int monthDays[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
-    void print(){
-        std::cout << tag << "." << monat <<"." << jahr <<std::endl;
-    }
-
-    int istSchaltJahr(){
-      if (((jahr % 4 == 0) && (jahr % 100 != 0)) || (jahr % 400 == 0)) return 1;
-      else return 0;
-    }
-
-    int nterTagimJahr(){
-      int n = tag;
-      for (int i=0; i<monat - 1; i++){
-          n += monthDays[i];
-      }
-      if (monat > 2) n += istSchaltJahr();
-      return n;
-    }
-};
-
-int main()
-{
-  Datum myDatumA;
-  myDatumA.tag = 31;
-  myDatumA.monat = 12;
-  myDatumA.jahr = 2000;
-  myDatumA.print();
-  std::cout << myDatumA.nterTagimJahr() << "ter Tag im Jahr " << myDatumA.jahr << std::endl;
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out `, `./a.out`)
 
 ### Objekte in Objekten
 
@@ -760,33 +472,3 @@ int main() {
 }
 ```
 @LIA.eval(`["Datum.h", "Person.h", "Person.cpp", "main.cpp"]`, `g++ -Wall main.cpp Person.cpp Datum.h -o a.out`, `./a.out`)
-
-## Beispiel des Tages
-
-> **Aufgabe: ** Erweitern Sie das Beispiel um zusätzliche Funktionen, wie die Berechnung des Umfanges. Überwachen Sie die Eingaben der Höhe und der Breite. Sofern diese negativ sind, sollte die Eingabe zurückgewiesen werden.
-
-```cpp   Rectangle
-#include <iostream>
-using namespace std;
-
-class Rectangle {
-  private:
-    int width, height;
-  public:
-    void set_values (int,int);          // Deklaration
-    int area() {return width*height;}   // Deklaration und Defintion
-};
-
-void Rectangle::set_values (int x, int y) {
-  width = x;
-  height = y;
-}
-
-int main () {
-  Rectangle rect;
-  rect.set_values (3,4);
-  cout << "area: " << rect.area();
-  return 0;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out `, `./a.out`)
