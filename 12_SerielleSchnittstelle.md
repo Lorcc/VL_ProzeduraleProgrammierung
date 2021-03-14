@@ -17,24 +17,6 @@ import: https://github.com/liascript/CodeRunner
 
 # Serielle Schnittstelle
 
-Die interaktive Version des Kurses ist unter diesem [Link](https://liascript.github.io/course/?https://raw.githubusercontent.com/SebastianZug/VL_ProzeduraleProgrammierung/master/12_SerielleSchnittstelle.md#1) zu finden.
-
-**Wie weit waren wir gekommen?**
-
-```cpp       uart.cpp
-
-int thisByte = 33;
-
-void setup() {
-  Serial.begin(9600); // opens serial port, sets data rate to 9600 bps
-  Serial.println("Hello World");
-}
-
-void loop() {
-}
-```
-@AVR8js.sketch
-
 **Inhalt der heutigen Veranstaltung**
 
 * Verständnis für die Funktionsweise der seriellen Kommunikation auf dem Mikrocontroller
@@ -82,16 +64,6 @@ Die Datenrate wird in _Bit pro Sekunde_ (bps) bzw. Baud (nach dem französischen
 150, 300, 1200, 2400, 4800, 9600, 19200, 38400, 57600 und 115200 Baud
 
 > **Merke:** Die Kommunikation über das RS232 Protokoll verfügt über keine Synchronisation zwischen Sender und Empfänger. Vielmehr muss die Datenrate manuell eingestellt und stabil gehalten werden.
-
-![C logo](./images/01_EinAusgabeDatentypen/ASCII_Zeichensatz.jpeg)<!--
-style=" width: 80%;
-        max-width: 600px;
-        min-width: 400px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;"
--->
-Quelle: [ASCII-Tabelle](http://www.chip.de/webapps/ASCII-Tabelle_50073950.html)
 
 ```cpp       avrlibc.cpp
 
