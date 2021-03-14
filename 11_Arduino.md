@@ -47,66 +47,10 @@ An dieser Stelle wollen wir zwei Aspekte vertiefen, um darauf aufbauend die Brü
 
 ### Konstruktor
 
-**Initialisierungsliste**
-
-Syntax (Wiederholung):
-
-```cpp        InitializerList.cpp
-#include <iostream>
-#include <string>
-
-class Droide
-{
-  private:
-    int id;
-    std::string serie;
-  public:
-    Droide():id(0),serie(""){}
-    Droide(int _id,std::string _serie):id(_id),serie(_serie){}
-    int getId(){return id;}
-    std::string getSerie(){return serie;}
-};
-
-int main() {
-  Droide dr1;
-  Droide dr2(11,"BB-Serie");
-  std::cout << dr1.getId()<<" "<< dr1.getSerie()<<std::endl;
-  std::cout << dr2.getId()<<" "<< dr2.getSerie()<<std::endl;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out`, `./a.out`)
-
 Die Initialisierung mit Initialisierungliste ist effizienter als per Zuweisungen im Anweisungsblock.
 Bei der Realisierung im Anweisungsblock sind Variablen bereits initialisiert und bekommen nur andere Werte zugewiesen.
 
 > **Merke:** Konstanten können ausschließlich in der Initialisierungsliste gesetzt werden.
-
-```cpp      Assignment.cpp
-#include <iostream>
-#include <string>
-
-class Droide
-{
-  private:
-    const int id;
-    std::string serie;
-  public:
-    //Droide(int _id,std::string _serie):id(_id),serie(_serie){}
-    Droide(int _id,std::string _serie)
-    {
-      id=_id; //compiler fehler
-      serie=_serie;
-    }
-    int getId(){return id;}
-    std::string getSerie(){return serie;}
-};
-
-int main() {
-  Droide dr2(11,"BB-Serie");
-  std::cout << dr2.getId()<<" "<< dr2.getSerie() <<std::endl;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out`, `./a.out`)
 
 Grundsätzlich ist eine Initialisierung mittels Initialisierungsliste vorzuziehen.
 Zu beachten ist bei der abhängigen Initialisierung, dass die Initialisierung in der Reihenfolge abläuft, in
@@ -206,25 +150,6 @@ int main()
 }
 ```
 
-Fehlerhaftes Programm:
-
-```cpp
-class Sternjaeger{
-  private:
-    Droide *droide;
-  public:
-    Sternjaeger(Droide *_droide):droide(_droide){}
-    ~Sternjaeger(){ delete droide;}
-};
-
-int main()
-{
-  Droide *d=new Droide();
-  Sternjaeger jaeger1(d), jaeger2(d);
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out`, `./a.out`)
-
 Wenn jeder Sternjaeger über einen eigenen Droide verfügen soll:
 
 ```cpp
@@ -272,7 +197,6 @@ Das Spektrum reicht von einfachen 8-Bit Controllern bis hin zu leistungsstarken 
 
 > **Merke:** Es gibt nicht **den** Arduino Controller, sondern eine Vielzahl von verschiedenen Boards.
 
-![Bild](./images/11_Arduino/ControllerBeispiele.jpg)<!-- style="width: 75%; max-width: 1000px" -->
 
 Unser Controller, ein 32 Bit System, auf den im nachfolgenden eingegangen wird, liegt im mittleren Segment der Leistungsfähigkeit.
 
@@ -281,8 +205,6 @@ Erweitert werden die Boards durch zusätzliche `Shields`, die den Funktionsumfan
 ### Software
 
 Die Entwicklungsumgebung fasst grundsätzliche Entwicklungswerkzeuge zusammen und richtet sich an Einsteiger.
-
-![Bild](./images/11_Arduino/IDE_Screenshot.png)<!-- style="width: 75%; max-width: 1000px" -->
 
 Wichtige Grundeinstellungen:
 
@@ -323,25 +245,6 @@ void loop() {
 | `digitalWrite(pin_id, state)`                             |                              Schreiben eines Pins, daraufhin liegen entweder (ungefähr) 3.3 V `HIGH` oder 0V `LOW` an                                                |
 
 > **Aufgabe:** Schreiben Sie ein Programm, dass ein Lauflicht aus LEDs realisiert.
-
-<div>
-  <wokwi-led color="yellow" pin="12" port="B" label="12"></wokwi-led>
-  <wokwi-led color="green" pin="11" port="B" label="11"></wokwi-led>
-  <wokwi-led color="blue" pin="10" port="B" label="10"></wokwi-led>
-  <wokwi-led color="red" pin="8" port="B" label="8"></wokwi-led>
-  <span id="simulation-time"></span>
-</div>
-```cpp       HelloWorld.cpp
-
-void setup() {
-    pinMode(LED_PIN, OUTPUT);       
-}
-
-void loop() {
-  // Hier fehlt jetzt Ihr Code
-}
-```
-@AVR8js.sketch
 
 
 | Befehl                       | Bedeutung                                                                      |
@@ -458,9 +361,6 @@ Dabei zeigt sich aber auch der Vorteil der Hochsprachen C und C++, die grundsät
 |            | _Microphone_                            |                                                          |
 | Anschlüsse | _Connecting finger extension interface_ |                                                          |
 
-![Bild](./images/11_Arduino/MXchip.png)<!-- style="width: 55%; max-width: 1000px" -->[^3]
-
-[^3]: Produktwebseite Firma MXChip, AZ3166 Procuct Details [Link](https://en.mxchip.com/az3166)
 
 Worin unterscheidet sich der Controller von einem willkürlich ausgewählten Laptop?
 
@@ -478,69 +378,3 @@ Zum Vergleich, eine Schreibmaschinenseite umfasst etwa 2KBytes.
 
 Die Dokumentation der zugehörige _Application Programming Interface_ (API) finden Sie unter [Link](https://microsoft.github.io/azure-iot-developer-kit/docs/apis/led/).
 Hier stehen Klassen bereit, die Einbettung der Sensoren, LEDs, des Displays kapseln und die Verwendung vereinfachen.
-
-## Allgemeines Vorgehen für das Erfassen von Messdaten
-
-Bestimmen Sie die Periodendauer eines Fadenpendels bzw. die Erdbeschleunigung bei einer bekannten Fadenlänge!
-
-$$
-T_0= 2\pi\sqrt{\frac{l}{g}}
-$$
-
-> **Frage:** Welche Sensoren können wir dafür nutzen?
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/q3_m1JW1ttQ" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-Unser Ansatz unterscheidet sich davon, wir nutzen den Magnetkompass unseres Boards, der auf die Präsenz von magnetoresistiven Materialien in der Umgebung reagiert [Link](https://microsoft.github.io/azure-iot-developer-kit/docs/apis/lis2mdl/#init).
-
-Der Sensor ist über den I2C Bus an unser Board angeknüpft. Dieser überträgt die Messdaten serialisiert an den Controller. Wir müssen also, um die Daten nutzen zu können sowohl eine Instanz der Sensorklasse `LIS2MDLSensor` als auch eine Instanz der Busklasse `DevI2C` erzeugen. Dem Sensor wird dabei das erzeugte Busobjekt im Konstruktor übergeben.
-
-```cpp   ReadingMagdnetometerValues.ino
-#include "LIS2MDLSensor.h"
-
-DevI2C ext_i2c(D14,D15);
-LIS2MDLSensor lis2mdl(ext_i2c);
-
-int axes[3];
-
-void setup(){
-    lis2mdl.init(NULL);
-    Serial.begin(115200);
-}
-
-void loop(){
-    lis2mdl.getMAxes(axes);
-    Serial.printf("%d, %d, %d\n", axes[0], axes[1], axes[2]);
-    delay(10);
-}
-```
-
-Bringen wir einen magnetorresistives Objekt in die Nähe des Sensors, so kann er dessen Auswirkung auf das Magnetfeld der Erde messen.
-
-![Bild](./images/11_Arduino/MagnetSensorWithScrewDriver.png)<!-- style="width: 55%; max-width: 1000px" -->
-
-Für unser Pendel sieht der Verlauf dann entsprechend wie folgt aus:
-
-![Bild](./images/11_Arduino/VerlaufMagnetSensor.png)<!-- style="width: 55%; max-width: 1000px" -->
-
-Eine Lösung für die Extraktion der Periodendauer finden Sie in unserem Vorlesungsverzeichnis [Link](https://github.com/SebastianZug/VL_ProzeduraleProgrammierung/blob/master/examples/11_Arduino/MagnetometerPendel/MagnetometerPendel.ino). Gelingt es Ihnen eine bessere Lösung zu entwickeln?
-
-```python
-import numpy as np
-import matplotlib.pyplot as plt
-
-periods = np.array([1524, 1541, 1541, 1541, 1541, 1541, 1531, 1541, 1541, 1541, 1541, 1537, 1531, 1541, 1541, 1541, 1541, 1531, 1530, 1530, 1541, 1541, 1542, 1537, 1531, 1541, 1541, 1531, 1541, 1531, 1541, 1531, 1541, 1531, 1542, 1531, 1542, 1541, 1531, 1537, 1531, 1542, 1531, 1541, 1531, 1531, 1542, 1541, 1531, 1541, 1531, 1531, 1531, 1531, 1531, 1541, 1535, 1531, 1541, 1531, 1545, 1541, 1541, 1541, 1541, 1541, 1541, 1541, 1541, 1537, 1541, 1541, 1541, 1531, 1541, 1542, 1541, 1541, 1541, 1541, 1531, 1542, 1541, 1541, 1541, 1541, 1531, 1541, 1541, 1542, 1541, 1541, 1542, 1531, 1541, 1541, 1531, 1538, 1530, 1531, 1530, 1541, 1530, 1541, 1534, 1541, 1531, 1531, 1541, 1541, 1530, 1541, 1531, 1542, 1531, 1541, 1531, 1534, 1541, 1531, 1541, 1534, 1541, 1542, 1531, 1541, 1531, 1541, 1541, 1541, 1541, 1531, 1531, 1530, 1541, 1531, 1530, 1532, 1531, 1541, 1541, 1541, 1534, 1545, 1541, 1531, 1531, 1541, 1542, 1541, 1534, 1530, 1542, 1531, 1531, 1542, 1531, 1541, 1541, 1530, 1535, 1541, 1541])
-
-periods = periods / 1000  # ms -> s
-length = (periods / ( 2 * np.pi))**2 * 9.81  # vgl. Gleichung Fadenpendel
-
-fig, ax = plt.subplots()
-ax.hist(length)
-plt.title("Gaussian Histogram")
-plt.xlabel("Periodendauer in ms")
-plt.ylabel("Häufigkeit")
-plt.show()
-
-plot(fig) # <- this is required to plot the fig also on the LiaScript canvas
-```
-@Pyodide.eval
