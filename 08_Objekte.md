@@ -98,64 +98,13 @@ gcc -o myprog main.o Person.o
 
 Wir kapseln zusammengehörigen Code in Dateien - Ziel erreicht? In den Dateien stehen unsere Datenformate und die eigentlichen Funktionen aber konzeptionell immer noch immer nebeneinander.
 
-```c
-struct Person
-{
-    char name[25];
-    struct Datum geburtstag;
-    int telefonnummer;
-};
-
-typedef struct Person Freund;
-
-void printFreund(Freund freundA){
-  printf("%s - %d.%d.%d\n",freundA.name,
-                           freundA.geburtstag.tag,
-                           freundA.geburtstag.monat,
-                           freundA.geburtstag.jahr);
-}
-
-int zumGeburtstagAnrufen(Freund freundm, struct Datum heute){
-  //
-  return 1;
-}
-```
-
 Was wollen wir mit der Zusammenfassung in einer Datei eigentlich ausdrücken? Auf eine `Person` (für die wir den Alias-Typ `Freund`) benutzen, können die Funktionen `void printFreund(Freund freundA)` und `int zumGeburtstagAnrufen(Freund freund)` angewandt werden. Eine echte Zuordnung ist nicht gegeben!
 
 Die objektorientierte Programmierung (OOP) ist ein Programmierparadigma, das auf dem Konzept der "Objekte" basiert, die Daten und Code enthalten können: Daten in Form von Feldern (oft als Attribute oder Eigenschaften bekannt) und Code in Form von Prozeduren (oft als Methoden bekannt).
 
-```ascii
-                 Person
-                   |
-  +----------------+-----------------+
-  |                                  |
-  +- char name[25];                  +- print()
-  +- struct Datum geburtstag;        +- zumGeburtstagAnrufen()
-  +- int telefonnummer;              +- ...
-
-     Daten                              Methoden/Funktionen                    .
-```
-
 Ein Merkmal von Objekten ist, dass die eigenen Prozeduren eines Objekts auf die Datenfelder seiner selbst zugreifen und diese oft verändern können - Objekte haben somit eine Vorstellung davon oder von sich selbst :-).
 
 Ein OOP-Computerprogramm kombiniert Objekt und lässt sie interagieren. Viele der am weitesten verbreiteten Programmiersprachen (wie C++, Java, Python usw.) sind Multi-Paradigma-Sprachen und unterstützen mehr oder weniger objektorientierte Programmierung, typischerweise in Kombination mit imperativer, prozeduraler Programmierung.
-
-<!--
-style="width: 90%; max-width: 860px; display: block; margin-left: auto; margin-right: auto;"
--->
-```ascii
-main                        Farm                           Animal
-+-----------------------+  +--------------------------+   +--------------------+
-| Farm JohnsFarm;       |->| Animal myAnimals[];      |-> | string name;       |
-| Farm PetersFarm;      |  | checkAnimalsPosition();  |   | ...                |
-| ...                   |  | feedAnimals();           |
-                           | getAnimalStatistics();   |    Building
-                           | ...                      |   +--------------------+
-                           | Farmbuilding buildings[];|-> | int purpose        |
-                                                          | startScanning()    |
-                                                          | ...                |
-```
 
 Wir erzeugen ausgehend von unserem Bauplan verschiedene Instanzen / Objekte vom Typ `Animals`. Jede hat den gleichen Funktionsumfang, aber unterschiedliche Daten.
 
