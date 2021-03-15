@@ -20,9 +20,6 @@ import: https://github.com/liascript/CodeRunner
 **Wie weit waren wir gekommen?**
 
 ```text @plantUML.png
-@startuml
-ditaa
-
 +-------------------------------------+  +-------------------------------------+
 | API Implementierung des Herstellers |  | Eigene Klassenimplementierungen     |
 | * Led-Klasse                        |  | * Filter-Klasse                     |
@@ -30,7 +27,6 @@ ditaa
 | * Serial-Klasse                     |  | * ....                              |
 | * ....                        cCCB  |  | * ....                      cBFB    |
 +-------------------------------------+  +-------------------------------------+
-               |                                            |
                |                                            |
                +-----------------------+--------------------+
                                        |
@@ -191,7 +187,6 @@ int main()
   }
 }
 ```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out`, `./a.out`)
 
 Eine besondere Form der Operatorüberladung ist der `<<`, mit dem die Ausgabe auf ein Streamobjekt realsiert werden kann.
 
@@ -228,9 +223,6 @@ int main()
   std::cout << gustav;
 }
 ```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out`, `./a.out`)
-
-Eine umfangreiche Diskussion zur Operatorüberladung finden Sie unter https://www.c-plusplus.net/forum/topic/232010/%C3%BCberladung-von-operatoren-in-c-teil-1/2
 
 ## Vererbung
 
@@ -258,25 +250,12 @@ Dabei können ganze Ketten von Vererbungen entstehen, wenn aus einem sehr allgem
 
 ```cpp  
 class Fahrzeug{
-  public:
-    int aktuellePosition[2];    // lat, long Position auf der Erde
-    std::string Zulassungsnummer;
-    Bool Fuehrerscheinpflichtig
-    ...
 };
 
 class Automobil: public Fahrzeug{
-  public:
-    void fahren();
-    int ZahlderRaeder;
-    int Sitze;
-    ...
 };
 
 class Hybrid: public Automobil{
-  public:
-    void fahreElektrisch();
-    ...
 };
 ```
 
