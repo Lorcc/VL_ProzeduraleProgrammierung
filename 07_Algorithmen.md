@@ -58,16 +58,8 @@ Gleichzeitig steigt aber die Lesbarkeit und Kompaktheit des Codes!
 
 ## Algorithmusbegriff
 
-                   {{0-4}}
-********************************************************************************
-
 Ein Algorithmus gibt eine strukturierte Vorgehensweise vor, um ein Problem zu lösen. Er implementiert Einzelschritte zur Abbildung von Eingabedaten auf Ausgabedaten.
 Algorithmen bilden die Grundlage der Programmierung und sind **unabhängig** von einer konkreten Programmiersprache. Algorithmen werden nicht nur maschinell durch einen Rechner ausgeführt sondern können auch von Menschen in „natürlicher“ Sprache formuliert und abgearbeitet werden.
-
-********************************************************************************
-
-                  {{1-4}}
-********************************************************************************
 
 1. Beispiel - Nassi-Shneiderman-Diagramm - Prüfung von Mineralen
 
@@ -75,28 +67,13 @@ Algorithmen bilden die Grundlage der Programmierung und sind **unabhängig** von
 
 [^1]: Anton Kubala, https://wiki.zum.de/wiki/Hauptseite
 
-********************************************************************************
-
-                  {{2-4}}
-********************************************************************************
-
  2. Beispiel - Funktionsdarstellung - Berechnung der Position
 
 $$ s(t) = \int_{0}^{t} v(t) dt + s_0 $$
 
-********************************************************************************
-
-                  {{3-4}}
-********************************************************************************
-
  3. Beispiel - Verbale Darstellung - Rezept
 
 *"Nehmen Sie ... Schneiden Sie ... Lassen Sie alles gut abkühlen ..."*
-
-********************************************************************************
-
-                  {{4-5}}
-********************************************************************************
 
 Algorithmen umfassen Sequenzen (Kompositionen), Wiederholungen (Iterationen) und Verzweigungen (Selektionen) von Handlungsanweisungen.
 und besitzen die folgenden charakteristischen Eigenschaften:
@@ -115,15 +92,8 @@ Der erste für einen Computer gedachte Algorithmus (zur Berechnung von Bernoulli
 ********************************************************************************
 
 ## Suche des Maximums
-<!--
-  comment: Compare3ValuesWithMacro.cpp
-  ..............................................................................
-      1. Ersetzen Sie das Makros durch eine Funktionen!
-  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--->
 
 Bestimmen Sie aus drei Zahlenwerten den größten und geben Sie diesen aus $max(n_0, n_1, n_2)$.
-
 
 Darfs auch etwas mehr sein? Wie lösen wir die gleiche Aufgabe für größere Mengen
 von Zahlenwerten $max(n_0, ... n_k)$ ? Entwerfen Sie dazu folgende Funktionen:
@@ -136,9 +106,6 @@ und dann die Häufigkeit des größten Wertes ermittelt.
 
 
 ## Sortieren
-
-              {{0-1}}
-********************************************************************************
 
 Lassen Sie uns die Idee der Max-Funktion nutzen, um das Array insgesamt zu
 sortieren. Dazu wird in einer Schleife (Zeile 42) der maximale Wert bestimmt,
@@ -230,7 +197,6 @@ Durchlaufes keine Änderungen vollzogen werden. Im günstigsten Fall lässt sich
 damit das Verfahren nach einem Durchlauf beenden.
 
 
-
 **Quicksort**
 
 Quicksort ist ein rekursiver Sortieralgorithmus, der die zu sortierende Liste in zwei Teillisten unterteilt und alle Elemente, die kleiner sind als das Pivot-Element, in die linke Teilliste, alle anderen in die rechte Teilliste einsortiert.
@@ -290,7 +256,6 @@ Obwohl Quicksort im schlechtesten Fall quadratische Laufzeit hat, ist er in der 
 
 Die C-Standardbibliothek umfasst in der `stdlib.h` eine Implementierung von quicksort - `qsort()` an. Sie wurde in der vorangegangenen Vorlesung besprochen. Ein Anwendungsbeispiel finden Sie im nachfolgenden Abschnitt.
 
-********************************************************************************
 
 ## Suchen
 <!--
