@@ -316,15 +316,6 @@ Der in der Arduino IDE eingebettete Serial Monitor ist eine Möglichkeit die üb
 
 werden die Texte sichtbar. Sie können die Informationen speichern, indem Sie diese Markieren und in eine Datei kopieren. Sofern Sie auf eine gleiche Zahl von Einträgen pro Zeile achten, können die Daten dann als [csv](https://de.wikipedia.org/wiki/CSV_(Dateiformat)) (_Comma-separated values_) Datei zum Beispiel mit Tabellenkalkulationsprogrammen geöffnet werden.
 
-![Monitor](./images/12_SerielleSchnittstelle/SeriellerMonitor.png)<!--
-style=" width: 80%;
-        max-width: 600px;
-        min-width: 400px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;"
--->
-
 > **Merke:** Die Einblendung des Zeitstempels garantiert die Zuordenbarkeit der kommunizierten Daten. Der Zeitstempel wird dabei vom Entwicklungsrechner generiert.
 
 Die Eingabe von Daten, die an den erfolgt in der Zeile unter dem Ausgabefeld. Erst mit dem Betätigen von Enter, werden die Daten tatsächlich übertragen.
@@ -335,18 +326,6 @@ Ein Datensatz besteht aus einer einzelnen Zeile, die durch einen Zeilenumbruch (
 
 Neben dem einfachen plotten von Zahlen können diese auch beschriftet werden. Beschriftungen können entweder einmalig im Setup gesetzt werden ODER sie können mit jeder Zeile übergeben werden.
 
-```
-Sensor1:30, Sensor2:45\n.
-```
-
-![Plotter](./images/12_SerielleSchnittstelle/SeriellerPlotter.png)<!--
-style=" width: 80%;
-        max-width: 600px;
-        min-width: 400px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;"
--->
 
 Anmerkungen:
 
@@ -573,4 +552,3 @@ void setup() {
 void loop() {
 }
 ```
-@AVR8js.sketch
