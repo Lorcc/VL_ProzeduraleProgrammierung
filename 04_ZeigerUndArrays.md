@@ -198,15 +198,6 @@ Initialisierung eines n-dimensionalen Arrays:
 Schreiben Sie ein Programm, dass in einem Text groß geschriebene Buchstaben
 durch klein geschriebene ersetzt und umgekehrt.
 
-![Matrix](./images/01_EinAusgabeDatentypen/ASCII_Zeichensatz.jpeg)<!--
-style=" width: 60%;
-        max-width: 800px;
-        min-width: 400px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;"
--->
-
 Da Variablen des Datentyps `char` genau ein Byte benötigen, liefert `sizeof`-Operator im folgenden Beispiel die Anzahl der Elemente des Arrays.
 
 
