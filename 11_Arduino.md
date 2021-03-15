@@ -222,6 +222,7 @@ Jedes Arduino-Programm umfasst zwei zentrale Funktionen - `setup` und `loop`. Er
   <wokwi-led color="red" pin="13" port="B" label="13"></wokwi-led>
   <span id="simulation-time"></span>
 </div>
+
 ```cpp       HelloWorld.cpp
 # define LED_PIN 13                 // Pin number attached to LED.
 //const int led_pin_red = 13;
@@ -242,14 +243,14 @@ void loop() {
 | Befehl                       | Bedeutung                                                                      |
 | ---------------------------- | ------------------------------------------------------------------------------ |
 | `pinMode(pin_id, direction)` | Festlegung der Konfiguration eines Pins als Input / Output (`INPUT`, `OUTPUT`) |
-| `digitalWrite(pin_id, state)`                             |                              Schreiben eines Pins, daraufhin liegen entweder (ungefähr) 3.3 V `HIGH` oder 0V `LOW` an                                                |
+| `digitalWrite(pin_id, state)`| Schreiben eines Pins, daraufhin liegen entweder (ungefähr) 3.3 V `HIGH` oder 0V `LOW` an                                                |
 
 > **Aufgabe:** Schreiben Sie ein Programm, dass ein Lauflicht aus LEDs realisiert.
 
 
 | Befehl                       | Bedeutung                                                                      |
 | ---------------------------- | ------------------------------------------------------------------------------ |
-| `state = digitalRead(pin_id)`                             |                              Lesen des Pegels an einem Pin - 3.3 V `HIGH` oder 0V `LOW` an                                                |
+| `state = digitalRead(pin_id)`| Lesen des Pegels an einem Pin - 3.3 V `HIGH` oder 0V `LOW` an                                                |
 
 Im Beispiel ist der grüne Button an Pin 3, der rote an Pin 2 angeschlossen.
 
@@ -287,58 +288,6 @@ Eine Allgemeine Übersicht zu den Arduinobefehlen finden Sie unter folgendem [Li
 #### Ablauf der Programmiervorganges
 
 Der Programmiervorgang für einen Mikrocontroller unterscheidet sich in einem Punkt signifikant von Ihren bisherigen C/C++ Aufgaben - die erstellten Programme sind auf dem Entwicklungssystem nicht ausführbar. Wir tauschen also den Compiler mit der Hardware aus. Dadurch "versteht" der Entwicklungsrechner die Anweisungen aber auch nicht.
-
-```text @plantUML.png
-@startuml
-ditaa
-
-+-----------------------------------------------------------------------------------------+
-:  C/C++ Programmierung                        Assemblerprogrammierung                    |
-|  +---------------+     +---------------+     +---------------+                          |            
-|  |c88F C/C++{o}  |---> |c8F8 arm-gcc   |---> |c88F *.asm{o}  |                          |            
-|  +---------------+     +---------------+     +---------------+                          |           
-|                                                      |                                  |
-|                         Spezifischer                 v                                  |
-|                         Compiler             +---------------+                          |         
-|                                              |c8F8 avr-as    |                          |         
-|                                              +---------------+                          |         
-|                                                      |                                  |
-|                                                      v                                  |
-|                                              +---------------+                          |         
-|                                              |      *.o{o}   |                          |         
-|                                              +---------------+                          |         
-|                                                      |                                  |
-|                                                      v                                  |
-|             +---------------+                +---------------+      +---------------+   |                                
-|             |c8F8 objcopy   |<-------+       |c8F8 avr-ld    | <----|    Library{o} |   |                                
-|             +---------------+        |       +---------------+      +---------------+   |                                
-|                      |               |               |                                  |
-|         +------------+-----------+   +---------------+                                  |
-|         |                        |                   |                                  |                
-|         v                        v                   v                                  |
-|  +---------------+       +---------------+   +---------------+                          |         
-|  |      *.hex{o} |  ...  |    *.bin{o}   |   |    *.elf{o}   |                          |         
-|  +---------------+       +---------------+   +---------------+                          |  
-|         |                        |                   |                                  |
-|         +------------------------+-------------------+                                  |
-|                                  |                                                      |
-|                                  v                                                      |
-|                          +---------------+                                              |
-|                          |c8F8 Programmer|                                              |
-|                          +---------------+                                              |     
-+-----------------------------------------------------------------------------------------+
-                                   |
-                                   +-------------------------+  
-                                   |                         |
-                                   v                         v        
-+-----------------------------------------------------------------------------------------+
-: +---------------+        +---------------+         +---------------+                    |
-| |c2F8 SRAM      |<------ |c2F8 Flash     |         |c2F8 EEPROM    |                    |
-| +---------------+        +---------------+         +---------------+                    |    
-| Mikrocontroller                                                                         |
-+-----------------------------------------------------------------------------------------+
-@enduml
-```
 
 Dabei zeigt sich aber auch der Vorteil der Hochsprachen C und C++, die grundsätzlichen Sprachinhalte sind prozessorunabhängig!
 
