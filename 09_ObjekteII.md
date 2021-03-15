@@ -82,39 +82,6 @@ Was gab es noch mal an unserer `ausgabeMethode()` zu meckern? In der aktuellen V
 
 Das "Zieldevice" wird als Referenz übergeben (vgl. Vorlesung 08). Damit erzeugen wir keine Kopie sondern können auf der ursprünglichen Instanz den Zustand verändern (Ausgabedaten übergeben).
 
-```cpp                     ostream.cpp
-#include <iostream>
-#include <fstream>
-
-class Student{
-  public:
-    std::string name;  // "-"
-    int alter;
-    std::string ort;
-
-    void ausgabeMethode(std::ostream& os); // Deklaration der Methode
-};
-
-// Implementierung der Methode
-void Student::ausgabeMethode(std::ostream& os){
-    os << name << " " << ort << " " << alter;
-}
-
-int main()
-{
-  Student bernhard {"Cotta", 25, "Zillbach"};
-  bernhard.ausgabeMethode(std::cout);
-
-  std::ofstream datei;
-  datei.open ("StudentenListe.txt", std::ios::out);
-  bernhard.ausgabeMethode(datei);
-  datei.close();
-
-  return EXIT_SUCCESS;
-}
-```
-@LIA.eval(`["main.c"]`, `g++ -Wall main.c -o a.out`, `./a.out`)
-
 ### Überladung von Methoden
 
 C verbietet Funktionen die einen gleichen Namen haben. Damit ist die variable Verwendung von Funktionen in Abhängigkeit von der Signatur der Funktion nicht möglich.
@@ -271,15 +238,3 @@ Destruktoren werden aufgerufen, wenn eines der folgenden Ereignisse eintritt:
 * Der Destruktor wird unter Verwendung des vollqualifizierten Namens der Funktion explizit aufgerufen.
 
 Einen Destruktor explizit aufzurufen, ist selten notwendig (oder gar eine gute Idee!).
-
-## Anwendung
-
-1. Ansteuern einer mehrfarbigen LED
-
-    Die Auflistung der Memberfunktionen der entsprechenden Klasse finden Sie unter [Link](https://microsoft.github.io/azure-iot-developer-kit/docs/apis/led/)
-
-2. Abfragen eines Sensors
-
-    Die Auflistung der Memberfunktionen der entsprechenden Klassen finden Sie unter [Link](https://microsoft.github.io/azure-iot-developer-kit/docs/apis/)
-
-Der Beispielcode für die Anwendungen ist in den `examples` Ordnern des Projektes enthalten.
